@@ -23,7 +23,17 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-Any static file server works. The page loads three.js and d3 from jsDelivr and fonts from Google Fonts. Deploying to GitHub Pages works as is.
+Any static file server works. The page loads three.js and d3 from jsDelivr and fonts from Google Fonts.
+
+### GitHub Pages
+
+The site uses only relative paths and ships a `.nojekyll` file, so it can be served straight from the repository root:
+
+1. Settings → Pages → Build and deployment → Source: **Deploy from a branch**
+2. Pick the branch that holds this code, folder **/ (root)**, then Save
+3. After a minute it is live at `https://<user>.github.io/<repo>/`
+
+Pages on a private repository needs a paid GitHub plan, and the published site is public either way.
 
 For hosts that only serve web media types, `python tools/pack_png.py OUT_DIR` writes a copy of the site whose `.bin` files are wrapped losslessly as PNGs (about 40% smaller). The page unwraps them in the browser.
 
