@@ -106,7 +106,7 @@ export class Explorer {
     const L = app.layers;
     const toggles = h("div", { class: "toggles" },
       sw("tg-points", "Cell bodies", true, (on) => { L.neurons.points.visible = on; }),
-      sw("tg-forest", "Neuron fibres", true, (on) => { if (!L.forest) { toast("Neuron shapes are still loading"); return; } on ? L.forest.fade(0.22, 0.8) : L.forest.fade(0, 0.6); }),
+      sw("tg-forest", "Neuron fibres", true, (on) => { if (!L.forest) { toast("Neuron shapes are still loading"); return; } on ? L.forest.fade(0.012, 0.8) : L.forest.fade(0, 0.6); }),
       sw("tg-regions", "Brain regions", false, (on) => L.neuropils.fadeTo(on ? 0.9 : 0.28, 0.8, { brainOnly: !on })),
       sw("tg-arcs", "Strong connections", false, (on) => { L.arcs.show(on); if (on) L.arcs.grow(2); }),
     );
@@ -147,7 +147,7 @@ export class Explorer {
     const app = this.app;
     if (!this.built) this.build();
     this.el.hidden = false;
-    app.stage({ points: { intensity: 0.3, color: "class" }, neuropils: { k: 0.28, brainOnly: true }, forest: 0.22 });
+    app.stage({ points: { intensity: 0.3, color: "class" }, neuropils: { k: 0.28, brainOnly: true }, forest: 0.012 });
     app.view({ dir: [0.08, 0.22, 1], dist: 1350, shift: "left" });
     // reset toggles to match the staged layers
     for (const [id, on] of [["tg-points", true], ["tg-forest", true], ["tg-regions", false], ["tg-arcs", false]]) {

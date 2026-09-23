@@ -30,7 +30,7 @@ const FRAG = /* glsl */`
 export class SkeletonLayer {
   // cols: pos int16 (V,3), parent int32, dist uint8, nIndex, vStart, vCount.
   // range: [firstNeuron, endNeuron) to build from a contiguous slice (featured groups).
-  constructor(world, cols, neuronMeta, neuronCols, { range = null, opacity = 0.5, colorFor = null } = {}) {
+  constructor(world, cols, neuronMeta, neuronCols, { range = null, opacity = 0.5, colorFor = null, maxGain = 1 } = {}) {
     this.world = world;
     const M0 = range ? range[0] : 0, M1 = range ? range[1] : cols.nIndex.length;
     const v0 = cols.vStart[M0], v1 = cols.vStart[M1 - 1] + cols.vCount[M1 - 1];
@@ -72,7 +72,7 @@ export class SkeletonLayer {
     this.lines.visible = false;
     world.brain.add(this.lines);
     this.baseOpacity = opacity;
-    world.onFrame((dt, t) => { this.uniforms.uTime.value = t; this.uniforms.uGain.value = Math.min(1, world.lineGain); });
+    world.onFrame((dt, t) => { this.uniforms.uTime.value = t; this.uniforms.uGain.value = Math.min(maxGain, world.lineGain); });
   }
 
   show(on = true) { this.lines.visible = on; }

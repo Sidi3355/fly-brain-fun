@@ -154,7 +154,7 @@ kbd {
 .rail button[aria-current="step"] { color: var(--ink); }
 .rail button[aria-current="step"] .rail-tick { width: 34px; background: var(--signal); box-shadow: 0 0 10px var(--signal); }
 .rail button:hover { color: var(--ink-2); }
-body.has-side .rail:not(:hover) button .rail-label { opacity: 0; }
+body.has-side .rail:not(:hover) button .rail-label, body.has-card .rail:not(:hover) button .rail-label { opacity: 0; }
 
 /* ---------- Chapter card ---------- */
 .stage {

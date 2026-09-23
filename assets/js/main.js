@@ -25,6 +25,8 @@ const app = {
   station: -1,
   ready: {},
   hoverHandlers: new Set(),
+  visitId: 0,
+  alive(v) { return app.visitId === v; }, // is the station visit that scheduled work still current?
 };
 window.neuronaut = app; // handy for curious visitors in the console
 
@@ -89,7 +91,7 @@ async function boot() {
   const shapeTick = () => { shapesDone++; if (shapesDone === 2) iShapes.done(`${fmt.format((app.data.forest?.count || 0) + (app.data.featuredCount || 0))} skeletons`); };
   Promise.all([fetchJSON(DATA + "forest.json"), loadColumns(DATA + "forest.bin", (p) => iShapes.progress(p * 0.7))]).then(([fm, fc]) => {
     app.data.forest = fm;
-    app.layers.forest = new SkeletonLayer(world, fc, meta, cols, { opacity: 0.18 });
+    app.layers.forest = new SkeletonLayer(world, fc, meta, cols, { opacity: 0.012, maxGain: 2.5 });
     app.ready.forest.resolve();
     shapeTick();
   }).catch((e) => { console.warn(e); iShapes.fail(); });
@@ -212,6 +214,7 @@ app.go = function go(i) {
   cleanup = null;
   hideTip();
   app.station = i;
+  app.visitId++;
   const s = STATIONS[i];
   [...rail.children].forEach((b, k) => { if (k === i) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
   $("#topbar-station").textContent = `${String(i + 1).padStart(2, "0")} / ${String(STATIONS.length).padStart(2, "0")} · ${s.title}`;
@@ -311,9 +314,10 @@ canvas.addEventListener("pointermove", (e) => {
   });
 });
 canvas.addEventListener("pointerup", (e) => {
-  if (!down || !app.layers.neurons) return;
+  if (!down || !app.layers.neurons || !app.card) return;
   const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
   if (moved > 6 || performance.now() - down.t > 600) return;
+  if (document.body.classList.contains("has-side")) return; // instruments occupy the right side
   const ndc = ndcOf(e);
   const i = app.layers.neurons.pick(ndc.x, ndc.y, e.pointerType === "touch" ? 18 : 9);
   if (i >= 0) { hideTip(); app.card.show(i); }
@@ -324,7 +328,7 @@ function neuronTip(i) {
   const cls = m.superClasses[c.super[i]], nt = m.nts[c.nt[i]], type = m.cellTypes[c.type[i]] || "untyped";
   return `<div class="tt-k">${escapeHtml(CLASSES[cls]?.label || cls)} · ${escapeHtml(m.sides[c.side[i]] || "")}</div>
     <div class="tt-v"><span class="tt-sw" style="--c:${CLASSES[cls]?.color}"></span>${escapeHtml(type)}</div>
-    <div>${escapeHtml(NTS[nt]?.label || "Unknown transmitter")} · click for its partners</div>`;
+    <div>${escapeHtml(NTS[nt]?.label || "Unknown transmitter")}${document.body.classList.contains("has-side") ? "" : " · click for its partners"}</div>`;
 }
 
 // ------------------------------------------------------------------ HUD

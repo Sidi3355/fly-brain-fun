@@ -1,6 +1,6 @@
 // Detail card for one neuron: identity, numbers, strongest partners drawn as live lines.
 import * as THREE from "three";
-import { DATA, loadColumns, fmt } from "./data.js";
+import { DATA, loadColumns, fetchBuffer, fmt } from "./data.js";
 import { h, escapeHtml, toast } from "./ui.js";
 import { CLASSES, NTS, SIDES } from "./theme.js";
 
@@ -47,7 +47,7 @@ export class NeuronCard {
   }
 
   async rootId(i) {
-    if (!this._ids) this._ids = fetch(DATA + "root_ids.bin").then((r) => r.arrayBuffer()).then((b) => new BigUint64Array(b));
+    if (!this._ids) this._ids = fetchBuffer(DATA + "root_ids.bin").then((b) => new BigUint64Array(b));
     return (await this._ids)[i].toString();
   }
 
@@ -75,13 +75,14 @@ export class NeuronCard {
     const type = this.label(i);
     const el = this.el;
     el.hidden = false;
+    document.body.classList.add("has-card");
     el.innerHTML = "";
     const close = h("button", { class: "icon-btn", type: "button", "aria-label": "Close neuron card" },
       h("span", { html: '<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>' }));
     close.addEventListener("click", () => this.close());
     const rootCode = h("code", {}, "loading…");
     const copyBtn = h("button", { class: "mini-btn", type: "button" }, "Copy");
-    const codex = h("a", { href: "https://codex.flywire.ai", target: "_blank", rel: "noopener" }, "Open in FlyWire Codex ↗");
+    const codex = h("a", { href: "https://codex.flywire.ai", target: "_blank", rel: "noopener" }, "Its full connectivity in FlyWire Codex ↗");
     const kv = h("dl", { class: "kv" });
     const addKV = (k, v) => { if (v) kv.append(h("dt", {}, k), h("dd", {}, v)); };
     addKV("Class", CLASSES[cls]?.label || cls || "—");
@@ -120,7 +121,7 @@ export class NeuronCard {
     this.rootId(i).then((id) => {
       if (this.current !== i) return;
       rootCode.textContent = id;
-      codex.href = `https://codex.flywire.ai/app/cell_details?cell_names_or_id=${id}&data_version=783`;
+      codex.href = `https://codex.flywire.ai/app/connectivity?dataset=fafb&cell_names_or_ids=${id}`;
       copyBtn.addEventListener("click", async () => {
         try { await navigator.clipboard.writeText(id); toast("Root ID copied"); }
         catch { const r = document.createRange(); r.selectNodeContents(rootCode); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selected. Press Ctrl+C / ⌘C to copy"); }
@@ -179,6 +180,7 @@ export class NeuronCard {
 
   close() {
     this.el.hidden = true;
+    document.body.classList.remove("has-card");
     this.current = -1;
     this.lines.visible = false;
     this.app.layers.neurons?.setHighlight(null);

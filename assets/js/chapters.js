@@ -139,7 +139,8 @@ function assembly(app, card) {
   app.ready.forest.then(() => { growBtn.disabled = false; });
   growBtn.addEventListener("click", () => {
     if (!app.layers.forest) return;
-    app.layers.forest.uniforms.uOpacity.value = 0.55;
+    app.layers.forest.fade(0.028, 0.2);
+    app.layers.neurons.tween("uIntensity", app.layers.neurons.uniforms.uIntensity.value, 0.12, 2);
     app.layers.forest.grow(7);
     app.audio.chime(2);
     toast(`Growing ${fmt.format(app.data.forest.count)} real neuron skeletons from their cell bodies`);
@@ -150,7 +151,7 @@ function assembly(app, card) {
 // ---------------------------------------------------------------- 3 · census
 function census(app, card) {
   const { layers } = app;
-  app.stage({ points: { intensity: 0.32, color: "class" }, neuropils: { k: 0.25, brainOnly: true }, forest: 0.16 });
+  app.stage({ points: { intensity: 0.3, color: "class" }, neuropils: { k: 0.25, brainOnly: true }, forest: 0.012 });
   app.view({ dir: [0.08, 0.22, 1], dist: 1320, shift: "left" });
   const meta = app.data.meta, cols = app.data.cols;
 
@@ -342,6 +343,7 @@ const CHARACTERS = {
 };
 
 function characters(app, card) {
+  const visit = app.visitId;
   const { layers } = app;
   app.stage({ points: { intensity: 0.06, color: "class" }, neuropils: { k: 0.3, brainOnly: true } });
   app.view({ dir: [0.1, 0.25, 1], dist: 1300, shift: "left" });
@@ -374,7 +376,7 @@ function characters(app, card) {
     app.audio.chime(gi);
   };
   app.ready.featured.then(() => {
-    if (!card.isConnected) return;
+    if (!app.alive(visit)) return;
     app.data.featured.groups.forEach((g, gi) => {
       const ch = CHARACTERS[g.id] || { name: g.id };
       const first = g.neurons[0];
@@ -384,7 +386,7 @@ function characters(app, card) {
       b.addEventListener("click", () => pick(gi));
       gallery.append(b);
     });
-    setTimeout(() => { if (card.isConnected && current < 0) pick(0); }, 900);
+    setTimeout(() => { if (app.alive(visit) && current < 0) pick(0); }, 900);
   });
   if (!app.data.featured) story.append(para("Loading neuron shapes…"));
   return () => {
@@ -408,6 +410,7 @@ const OUTCOMES = {
 
 
 function pulse(app, card, side) {
+  const visit = app.visitId;
   const { layers, sim } = app;
   app.stage({ points: { intensity: 0.08, color: "class" }, neuropils: { k: 0.3, brainOnly: true } });
   app.view({ dir: [0.05, 0.2, 1], dist: 1350, shift: "both" });
@@ -470,7 +473,7 @@ function pulse(app, card, side) {
     for (const b of grid.children) b.setAttribute("aria-pressed", String(b === btn));
     outcome.hidden = true;
     const data = await sim.select(exp);
-    if (!card.isConnected) return;
+    if (!app.alive(visit)) return;
     raster.build(data, sim.duration);
     rasterHead.textContent = `${fmt.format(exp.active_neurons)} neurons · ${fmt.format(exp.spikes)} spikes`;
     charts.pathway(pw, exp.pathway, 480);
@@ -498,13 +501,13 @@ function pulse(app, card, side) {
     app.audio.chime(2);
   };
   sim.index().then((idx) => {
-    if (!card.isConnected) return;
+    if (!app.alive(visit)) return;
     idx.experiments.forEach((exp, i) => {
       const b = h("button", { class: "stim", type: "button", "aria-pressed": "false" },
         h("span", { class: "s-name" }, exp.label), h("span", { class: "s-sub" }, `${fmt.format(exp.stimulus.count)} neurons at ${Math.round(exp.stimulus.rate_hz || 150)} Hz`));
       b.addEventListener("click", () => choose(exp, b));
       grid.append(b);
-      if (i === 0) setTimeout(() => card.isConnected && choose(exp, b), 700);
+      if (i === 0) setTimeout(() => app.alive(visit) && choose(exp, b), 700);
     });
   }).catch(() => grid.append(para("The simulation data is still being prepared.")));
   return () => { offSim(); sim.clear(); side.hidden = true; };
@@ -512,7 +515,7 @@ function pulse(app, card, side) {
 
 // ---------------------------------------------------------------- 8 · scale
 function scale(app, card) {
-  app.stage({ points: { intensity: 0.34, color: "class" }, neuropils: { k: 0.3, brainOnly: true }, forest: 0.2 });
+  app.stage({ points: { intensity: 0.32, color: "class" }, neuropils: { k: 0.3, brainOnly: true }, forest: 0.012 });
   app.view({ dir: [0.3, 0.3, 1], dist: 3600, shift: "left", duration: 3.4 });
   const tl = h("div", {});
   const go = h("button", { class: "btn btn-primary", type: "button" }, "Explore freely");

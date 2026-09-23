@@ -22,10 +22,13 @@ const VERT = /* glsl */`
     float dim = mix(1.0, mix(uDimTo, 1.0, hi), uFocus);
     float tw = 0.85 + 0.15 * sin(uTime * (0.6 + aSeed) + aSeed * 60.0);
     float size = uSize * (0.55 + 0.9 * aSeed) * (1.0 + front * 2.2 + aAct * 3.2 + hi * uFocus * 0.9);
-    gl_PointSize = clamp(size * uScale / -mv.z, 0.0, 64.0);
+    float px = size * uScale / -mv.z;
+    gl_PointSize = clamp(px, 1.5, 64.0);
+    // below ~1.5 px a point can't shrink further, so fade it instead to keep the glow's energy constant
+    float energy = min(1.0, (px * px) / 2.25);
     vec3 base = mix(aColorA, aColorB, uMix);
-    vColor = base * tw * (1.0 + front * 2.5) + vec3(0.75, 0.97, 1.0) * aAct * 2.2;
-    vAlpha = born * shown * dim;
+    vColor = base * tw * (1.0 + front * 2.5 + hi * uFocus * 2.2) + vec3(0.75, 0.97, 1.0) * aAct * 2.2;
+    vAlpha = born * shown * dim * energy;
   }`;
 
 const FRAG = /* glsl */`

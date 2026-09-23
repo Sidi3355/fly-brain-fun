@@ -198,13 +198,14 @@ export function pathway(el, pw, width = 480) {
       const p = pos(li, ni);
       const c = CHART_CLASS_COLOR[chartClassOf(node.super_class)] || "#777";
       const g = svg.append("g").attr("transform", `translate(${p.x},${p.y})`);
-      g.append("rect").attr("width", nodeW).attr("height", nodeH).attr("rx", 3).attr("fill", "#0b0a14").attr("stroke", c).attr("stroke-width", 1.2);
+      g.append("rect").attr("width", nodeW).attr("height", nodeH).attr("rx", 3).attr("fill", node.aka ? "#1b2a33" : "#0b0a14").attr("stroke", node.aka ? "#a6f4ff" : c).attr("stroke-width", node.aka ? 1.8 : 1.2);
       g.append("rect").attr("width", 3).attr("height", nodeH).attr("rx", 1.5).attr("fill", c);
-      const label = node.type.length > 15 ? node.type.slice(0, 14) + "…" : node.type;
+      const name = node.aka ? node.aka.split(" (")[0] : node.type;
+      const label = name.length > 15 ? name.slice(0, 14) + "…" : name;
       g.append("text").attr("x", 8).attr("y", 13.5).text(label).attr("fill", "#eceaf8");
       g.append("rect").attr("width", nodeW).attr("height", nodeH).attr("fill", "transparent")
         .on("pointermove", (ev) => showTip(ev.clientX, ev.clientY,
-          `<div class="tt-k">${escapeHtml(CLASSES[node.super_class]?.label || node.super_class)}</div><div class="tt-v">${escapeHtml(node.type)}</div><div>${node.n} neuron${node.n === 1 ? "" : "s"}${node.rate ? ` · ${node.rate.toFixed(0)} Hz` : ""}</div>`))
+          `<div class="tt-k">${escapeHtml(CLASSES[node.super_class]?.label || node.super_class)}</div><div class="tt-v">${escapeHtml(node.type)}${node.aka ? ` · ${escapeHtml(node.aka)}` : ""}</div><div>${node.n} neuron${node.n === 1 ? "" : "s"}${node.rate ? ` · ${node.rate.toFixed(0)} Hz` : ""}</div>`))
         .on("pointerleave", hideTip);
     });
   });
