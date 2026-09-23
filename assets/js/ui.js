@@ -56,3 +56,8 @@ export function animateNumber(el, to, { from = 0, dur = 1.6, format = (v) => Mat
 export function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
+
+// Write text only when it changes, so per-frame counters don't churn layout.
+export function setText(el, text) {
+  if (el.textContent !== text) el.textContent = text;
+}

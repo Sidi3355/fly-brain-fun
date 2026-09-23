@@ -1,5 +1,5 @@
 // The voyage: each station sets the scene, the camera and the story card.
-import { h, animateNumber, showTip, hideTip, escapeHtml, toast } from "./ui.js";
+import { h, showTip, hideTip, escapeHtml, toast, setText } from "./ui.js";
 import { fmt, fmtCompact } from "./data.js";
 import { CLASSES, CLASS_ORDER, NTS, NT_ORDER, SIDES, SYSTEM_COLORS, SYSTEM_BLURBS, REGION_BLURBS, CHART_CLASS_COLOR, chartClassOf } from "./theme.js";
 import * as charts from "./charts.js";
@@ -68,14 +68,18 @@ function slice(app, card, side) {
   segToggle.addEventListener("change", () => { segTarget = segToggle.checked ? 0.85 : 0; if (segToggle.checked) app.audio.chime(3); });
   let segTarget = 0;
 
-  let t0 = world.time;
+  let t0 = world.time, lastTick = -1;
   const off = world.onFrame((dt, t) => {
     // sweep: anterior -> posterior and back, 24 s round trip
     const p = 0.5 - 0.5 * Math.cos(((t - t0) / 24) * Math.PI * 2);
     layers.em.setProgress(p);
     layers.em.setOpacity(Math.min(1, (t - t0) / 1.5) * 0.95);
-    secEl.textContent = fmt.format(layers.em.section);
-    depthEl.textContent = ((layers.em.section - 0) * 0.04).toFixed(1);
+    // readouts tick at ~12 Hz, not every frame, so the digits read as a counter rather than a flicker
+    if (Math.floor(t * 12) !== lastTick) {
+      lastTick = Math.floor(t * 12);
+      setText(secEl, fmt.format(layers.em.section));
+      setText(depthEl, (layers.em.section * 0.04).toFixed(1));
+    }
     if (auto) {
       autoT += dt;
       scope.s = Math.min(1, Math.max(0, (autoT - 1.2) / 11));
@@ -86,11 +90,11 @@ function slice(app, card, side) {
     scope.seg += (segTarget - scope.seg) * Math.min(1, dt * 4);
     const f = scope.draw();
     const sb = niceScale(f);
-    bar.style.width = `${(sb.frac * canvas.clientWidth).toFixed(1)}px`;
-    barLabel.textContent = sb.label;
+    bar.style.width = `${Math.round(sb.frac * canvas.clientWidth)}px`;
+    setText(barLabel, sb.label);
     const nmpx = f * 1000 / Math.max(1, canvas.clientWidth);
-    pxRead.textContent = `${nmpx < 10 ? nmpx.toFixed(1) : Math.round(nmpx)} nm / px`;
-    label.textContent = scope.seg > 0.2 ? "colour = neuron class" : "";
+    setText(pxRead, `${nmpx < 10 ? nmpx.toFixed(1) : Math.round(nmpx)} nm / px`);
+    setText(label, scope.seg > 0.2 ? "colour = neuron class" : "");
   });
   return () => { off(); layers.em.setOpacity(0); side.hidden = true; };
 }
@@ -130,11 +134,13 @@ function assembly(app, card) {
   };
   run();
   replay.addEventListener("click", run);
-  const off = world.onFrame(() => {
-    const r = layers.neurons.uniforms.uReveal.value;
-    const c = Math.min(N, count(r));
-    nEl.textContent = fmt.format(c);
-    sEl.textContent = fmtCompact.format(Math.round(synTotal * c / N));
+  let lastTick = -1;
+  const off = world.onFrame((dt, t) => {
+    if (Math.floor(t * 12) === lastTick) return;
+    lastTick = Math.floor(t * 12);
+    const c = Math.min(N, count(layers.neurons.uniforms.uReveal.value));
+    setText(nEl, fmt.format(c));
+    setText(sEl, fmtCompact.format(Math.round(synTotal * c / N)));
   });
   app.ready.forest.then(() => { growBtn.disabled = false; });
   growBtn.addEventListener("click", () => {
@@ -459,7 +465,7 @@ function pulse(app, card, side) {
   const offSim = sim.on((kind) => {
     if (kind === "state") setPlayIcon(sim.playing);
     if (kind === "time" || kind === "select") {
-      clock.textContent = `${sim.tMs.toFixed(1)} ms`;
+      setText(clock, `${Math.round(sim.tMs)} ms`);
       if (!scrubbing) scrub.value = String(Math.round(1000 * sim.tMs / sim.duration));
       raster.draw(sim.tMs);
     }

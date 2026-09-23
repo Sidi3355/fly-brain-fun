@@ -12,7 +12,7 @@ import { Audio } from "./audio.js";
 import { STATIONS, CHAPTERS } from "./chapters.js";
 import { Explorer } from "./explore.js";
 import { NeuronCard } from "./neuroncard.js";
-import { $, h, showTip, hideTip, escapeHtml, toast } from "./ui.js";
+import { $, h, showTip, hideTip, escapeHtml, toast, setText } from "./ui.js";
 import { CLASSES, NTS } from "./theme.js";
 
 const world = new World($("#world"));
@@ -337,7 +337,9 @@ setInterval(() => {
   if ($("#hud").hidden) return;
   const p = world.camera.position, t = world.controls.target;
   const d = p.distanceTo(t);
-  hudPos.textContent = `cam ${(-p.x).toFixed(0)} ${p.y.toFixed(0)} ${p.z.toFixed(0)} µm · range ${d.toFixed(0)} µm`;
-  hudCount.textContent = `${fmt.format(app.data.meta?.count || 0)} neurons`;
-  hudMode.textContent = app.sim?.playing ? `simulating · ${app.sim.tMs.toFixed(0)} ms` : "FlyWire v783";
-}, 250);
+  // rounded to 10 µm so the slow auto-orbit doesn't make the readout flicker
+  const r10 = (v) => Math.round(v / 10) * 10;
+  setText(hudPos, `cam ${r10(-p.x)} ${r10(p.y)} ${r10(p.z)} µm · range ${r10(d)} µm`);
+  setText(hudCount, `${fmt.format(app.data.meta?.count || 0)} neurons`);
+  setText(hudMode, app.sim?.playing ? `simulating · ${Math.round(app.sim.tMs / 10) * 10} ms` : "FlyWire v783");
+}, 500);
