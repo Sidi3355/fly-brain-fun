@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neuronaut</title>
+<meta name="description" content="A voyage through the complete wiring diagram of a fruit fly brain: 139,255 real neurons and 54.5 million synapses from the FlyWire connectome, in 3D.">
+<meta name="theme-color" content="#07060d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+    "d3": "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="world" aria-label="3D view of the fruit fly brain"></canvas>
+<div class="atmosphere" aria-hidden="true"></div>
+
+<!-- ARRIVAL -->
+<section id="arrival" class="arrival" aria-labelledby="arrival-title">
+  <div class="arrival-inner">
+    <p class="eyebrow mono">FlyWire connectome · v783 · one adult female <i>Drosophila melanogaster</i></p>
+    <h1 id="arrival-title" class="wordmark">Neuronaut</h1>
+    <p class="arrival-lede">A voyage through every neuron of a fruit fly&rsquo;s brain: <span class="nowrap">139,255 cells</span> and <span class="nowrap">54.5 million synapses</span>, mapped one by one.</p>
+    <ol class="load-list mono" id="load-list" aria-live="polite"></ol>
+    <div class="arrival-actions">
+      <button class="btn btn-primary" id="begin-sound" disabled>Begin the voyage <span class="btn-sub">with sound</span></button>
+      <button class="btn btn-ghost" id="begin-quiet" disabled>Enter in silence</button>
+    </div>
+    <p class="arrival-foot mono">Drag to orbit · scroll or pinch to zoom · <kbd>←</kbd> <kbd>→</kbd> to travel</p>
+  </div>
+</section>
+
+<!-- CHROME -->
+<header class="topbar" id="topbar" hidden>
+  <button class="brand" id="brand" aria-label="Back to the first station">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><path d="M16 3l11 6.5v13L16 29 5 22.5v-13z"/><path d="M16 3v26M5 9.5l22 13M27 9.5l-22 13" opacity=".35"/><circle cx="16" cy="16" r="3.2" fill="currentColor" stroke="none"/></g></svg>
+    <span>Neuronaut</span>
+  </button>
+  <div class="topbar-station mono" id="topbar-station"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="sound-btn" aria-pressed="false" aria-label="Sound off" title="Sound">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z" fill="currentColor"/><g class="waves" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M15.5 9a4.2 4.2 0 010 6"/><path d="M18 6.5a8 8 0 010 11"/></g><path class="mute" d="M16 9.5l5 5M21 9.5l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <button class="icon-btn" id="about-btn" aria-label="About the data" title="About the data">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor"/></svg>
+    </button>
+    <button class="pill" id="explore-btn">Explore freely</button>
+  </div>
+</header>
+
+<nav class="rail" id="rail" aria-label="Stations" hidden></nav>
+
+<main class="stage" id="stage" hidden>
+  <article class="card" id="card" aria-live="polite"></article>
+</main>
+
+<div class="side-panel" id="side-panel" hidden></div>
+
+<aside class="explore" id="explore" hidden aria-label="Explore tools"></aside>
+<aside class="neuron-card" id="neuron-card" hidden aria-label="Selected neuron"></aside>
+
+<div class="hud mono" id="hud" hidden>
+  <span id="hud-pos">—</span>
+  <span class="hud-sep" aria-hidden="true">/</span>
+  <span id="hud-count">—</span>
+  <span class="hud-sep" aria-hidden="true">/</span>
+  <span id="hud-mode">FlyWire v783</span>
+</div>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<div class="toast mono" id="toast" role="status" hidden></div>
+
+<dialog class="about" id="about">
+  <div class="about-inner">
+    <button class="icon-btn about-close" id="about-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+    </button>
+    <p class="eyebrow mono">About the data</p>
+    <h2>Everything here is real</h2>
+    <p>Every neuron position, cell type, brain region, connection, neuron shape and microscope image on this site comes from public FlyWire and FAFB data. Neuronaut is an independent visualisation. It is not affiliated with the FlyWire Consortium.</p>
+    <dl class="sources">
+      <dt>Connectome</dt><dd>FlyWire v783, the proofread whole-brain connectome: 139,255 neurons, 54.5M synapses. Dorkenwald et al., <i>Neuronal wiring diagram of an adult brain</i>, Nature 2024.</dd>
+      <dt>Cell types</dt><dd>Schlegel et al., <i>Whole-brain annotation and multi-connectome cell typing</i>, Nature 2024 (flywire_annotations).</dd>
+      <dt>Microscopy</dt><dd>FAFB volume: Zheng et al., <i>A complete electron microscopy volume of the brain of adult Drosophila melanogaster</i>, Cell 2018. 7,062 sections, 21 million images.</dd>
+      <dt>Synapses &amp; transmitters</dt><dd>Buhmann et al., Nature Methods 2021; Eckstein et al., Cell 2024. Transmitters are predicted from EM, not measured.</dd>
+      <dt>Brain regions</dt><dd>Neuropil meshes from FlyWire, nomenclature after Ito et al., Neuron 2014.</dd>
+      <dt>Simulation</dt><dd>Leaky integrate-and-fire model after Shiu et al., <i>A Drosophila computational brain model reveals sensorimotor processing</i>, Nature 2024, re-run here on v783.</dd>
+    </dl>
+    <p class="about-foot mono">Data: CC BY 4.0 · Explore the source at <a href="https://codex.flywire.ai" target="_blank" rel="noopener">codex.flywire.ai</a></p>
+  </div>
+</dialog>
+
+<noscript><p class="noscript">Neuronaut needs JavaScript and WebGL to render the fly brain.</p></noscript>
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

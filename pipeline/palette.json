@@ -1,0 +1,25 @@
+{
+  "note": "Categorical hues validated for the dark surface #0b0a14 (OKLCH L 0.48-0.67, adjacent CVD dE >= 8) in the order listed; charts fold motor/endocrine/sensory_ascending into 'other' (red).",
+  "superClasses": {
+    "optic": "#3987e5",
+    "central": "#d95926",
+    "visual_projection": "#199e70",
+    "sensory": "#c98500",
+    "ascending": "#d55181",
+    "descending": "#008300",
+    "visual_centrifugal": "#9085e9",
+    "motor": "#e66767",
+    "endocrine": "#e66767",
+    "sensory_ascending": "#e66767",
+    "": "#77738f"
+  },
+  "nts": {
+    "acetylcholine": "#d95926",
+    "gaba": "#3987e5",
+    "glutamate": "#199e70",
+    "octopamine": "#c98500",
+    "dopamine": "#d55181",
+    "serotonin": "#008300",
+    "": "#77738f"
+  }
+}
