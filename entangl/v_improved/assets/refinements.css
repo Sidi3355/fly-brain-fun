@@ -113,7 +113,7 @@ dialog[open]::backdrop{animation:ref-fade .22s var(--ease)}
 @media (orientation:landscape) and (max-height:500px){
   .nav-shell{min-height:56px}
   html{scroll-padding-top:72px}
-  .life-section.life-hero .life-hero-sticky{min-height:0}
+  .life-section.life-hero.life-hero-enhanced .life-hero-sticky{min-height:0}
   .life-hero[data-life-mobile="false"] #life-moment-title{font-size:22px;line-height:1.15}
   .life-hero[data-life-mobile="false"] #life-moment-copy{font-size:13px;line-height:1.45}
   .life-hero[data-life-mobile="false"] .life-stage-features p{display:none}

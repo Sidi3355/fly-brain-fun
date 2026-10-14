@@ -233,4 +233,78 @@ That last one is inherent to drawing the model at its true size. Headless measur
 
 ## 3. Results
 
-Measured on `../v_improved` with the same tools and scenarios. See section 4, filled in after the rebuild.
+Measured on `../v_improved` with the same tools, scenarios and pages as the baseline. Bold figures changed.
+
+### Measured, all 28 pages
+
+| Scenario | Overflow | Max CLS load | Max CLS scroll | Tap < 24 px | Tap < 44 px | Text < 12 px | Contrast < AA | Orphans | Errors |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| phone-small | 0 | 0.000 | 0.070 → **0.000** | 492 → **60** | 1137 → **616** | 177 → **139** | 577 → **340** | 105 → **58** | 0 |
+| phone | 0 | 0.000 | 0.060 → **0.000** | 734 → **59** | 1136 → **856** | 177 → **139** | 577 → **340** | 52 → **31** | 0 |
+| phone-landscape | 0 | 0.000 | 0.037 → **0.019** | 879 → **69** | 1121 → **1003** | 124 → **116** | 584 → **347** | 46 → **21** | 0 |
+| tablet-portrait | 0 | 0.000 | 0.021 → **0.000** | 879 → **69** | 1119 → **1001** | 124 → **117** | 584 → **347** | 49 → **22** | 0 |
+| tablet-landscape | 0 | 0.011 | 0.092 → **0.013** | 877 → **67** | 1093 → **1002** | 111 → **99** | 593 → **356** | 23 → **12** | 0 |
+| laptop-small | 0 | 0.013 | 0.104 → **0.009** | 877 → **67** | n/a | 110 → **98** | 593 → **356** | 17 → **11** | 0 |
+| laptop | 0 | 0.009 | 0.083 → **0.007** | 877 → **67** | n/a | 110 → **98** | 593 → **356** | 11 → **8** | 0 |
+| desktop | 0 | 0.004 | 0.041 → **0.003** | 877 → **67** | n/a | 110 → **98** | 593 → **356** | 11 → **7** | 0 |
+| wide | 0 | 0.002 | 0.020 → **0.002** | 877 → **67** | n/a | 110 → **98** | 593 → **356** | 11 → **7** | 0 |
+| zoom-200 | 0 | 0.091 → **0.044** | 0.052 → **0.020** | 870 → **60** | n/a | 119 → **111** | 581 → **344** | 17 → **10** | 0 |
+
+- **Layout shift while scrolling** dropped to effectively zero on every touch device and laptop. The stage buttons no longer force layout (C3) and the model no longer drops into place after first paint (C2). At 200% zoom the shift during load halved as well.
+- **Small tap targets:** 30–35 per page under 24 px became 2–3. These are what's left:
+  - links set inline in running text, which WCAG exempts
+  - the demo form's checkboxes, whose labels are the real target
+- **Touch targets under 44 px** are down by 10–45%. The remaining ones are compact controls inside the interactive examples (chips, steppers, segmented buttons). Enlarging those would change the examples' layout, so they're outside a "small fixes" brief.
+- **Contrast failures** fell by 40%. Most of the rest are near misses: body copy and links at 4.2–4.49:1 against a 4.5:1 target, spread across many individual colours. Each needs a one-value change, listed here as a follow-up rather than done wholesale.
+- **Text under 12 px:** what remains is in the `/experience/` embed and the labels painted into the 3D illustration. Both were deliberately left alone.
+- **No regressions:** no horizontal overflow, console errors or failed requests in any scenario. Reduced motion still switches off every animation and transition.
+
+### Interactions (`interactions.cjs`)
+
+| Check | Before | After |
+| --- | --- | --- |
+| Page movement while the mobile menu is open | scrolled 3,600 px | **0 px** |
+| Mobile menu appearance | 0 ms, instant | **200 ms fade and lift, page under a scrim** |
+| Page movement behind the sign-in dialog | 800 px per scroll | **0 px** |
+| Value panel after tapping a card (phone, 664 px viewport) | top at 665–917 px, off-screen | **top at 113–335 px, in view** |
+| Moments panel height across six tabs (phone) | 240–271 px, jumps 31 px | **271 px, steady** |
+| Mega-menu and dialog opening | instant | **180–220 ms settle** |
+| In-page anchors, FAQ deep links, demo form | sound | unchanged |
+
+### Lifecycle reading column (D1)
+
+Pixels of content hidden below the column's edge, for each of the six stages:
+
+| Viewport | Before | After |
+| --- | --- | --- |
+| 1920 × 1080 | 0 | 0 |
+| 1440 × 900 | card cut, action half visible | **0 in all six** |
+| 1536 × 864 | cut | **0 in all six** |
+| 1366 × 768 | cut | **0–26, edge fades** |
+| 1280 × 720 | card action hidden | **12–70, action visible in stages 1–2, edge fades** |
+| Phone | hard cut in every stage | scrolls inside the column, **edge fades** |
+
+On short laptops and phones the column still holds more than fits. What changed is that the reader can now see that it continues and can scroll it. Making it fit fully on a phone would mean shrinking the model or splitting the column. That's a design decision, so it's left for the owner.
+
+### What you can see
+
+Before/after pairs in `screenshots/`:
+
+| File | Finding |
+| --- | --- |
+| `A1-pressure-heading-phone.jpg` | A1: "pressureyou’re" restored to "pressure you’re", with a balanced heading |
+| `A1-moments-intro-phone.jpg` | A1: "decisions.Follow" restored |
+| `A3-value-stat-phone.jpg` | A3: "$10k" on one line |
+| `A6-report-facts-phone.jpg` | A6: report figures on one baseline |
+| `B1-footer-phone.jpg` | B1: footer hit areas (outlined) |
+| `B3-mobile-menu-phone.jpg` | B3: menu over a scrim |
+| `B4-value-tab-phone.jpg` | B4: the chosen panel in view |
+| `B6-moment-tabs-phone.jpg` | B6: the tab row fades where it continues |
+| `D1-lifecycle-1280x720.jpg`, `D1-lifecycle-1440x900.jpg`, `D1-lifecycle-phone.jpg` | D1, D2: the card fits; the legend clears the controls |
+| `D3-lifecycle-landscape.jpg` | D3: compact header and a side-by-side story on a phone held sideways |
+
+### Caveats
+
+- **Scrolling smoothness isn't reported.** The browser runs headless with software WebGL, which exaggerates the 3D model's rendering cost. The frames-over-50 ms and long-task counts are in the raw JSON for comparison but aren't presented as results.
+- **Some layout shift is intended movement.** CLS counts the lifecycle's scroll-linked motion as shift, even though the movement is deliberate. The "scroll" figures show how much movement went through layout; they aren't a count of surprises.
+- **One regression was caught and fixed.** The first build's landscape fix (D3) let the hero shrink before its script ran, which pushed load-time shift at 200% zoom to 0.391. The final version keeps the original minimum height until the script has measured the screen, and three repeat runs measure 0.044.
