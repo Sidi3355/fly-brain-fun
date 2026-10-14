@@ -1,0 +1,17 @@
+/* Supplied Entangl artwork. Keep the symbol/wordmark ratio and clear space intact. */
+.brand{display:inline-flex;align-items:center;justify-content:flex-start;flex:0 0 auto;gap:0;min-height:44px;line-height:1;letter-spacing:normal;text-decoration:none}
+.brand .brand-logo{display:block;width:var(--brand-width,148px);height:auto;max-width:none;flex:none;object-fit:contain}
+.site-header .brand{--brand-width:132px}
+.site-footer .brand{--brand-width:160px;align-self:center;flex:0 0 auto;padding:0}
+.dialog-topline .brand{--brand-width:132px}
+.tablet-topbar .brand{--brand-width:84px;min-height:32px}
+@media(max-width:1000px){.site-header .brand{--brand-width:124px}}
+@media(max-width:760px){.site-header .brand{--brand-width:112px}.site-footer .brand{--brand-width:148px}}
+@media(max-width:360px){.site-header .brand{--brand-width:96px}.site-footer .brand{--brand-width:136px}}
+
+/* Annual research: a direct link available in desktop and mobile navigation. */
+.nav-report{display:block;font-size:14px;line-height:1.5;white-space:nowrap;padding:30px 0;color:var(--green)}
+.nav-report:hover,.nav-report[aria-current=page]{text-decoration:underline;text-underline-offset:5px}
+@media(min-width:1001px) and (max-width:1350px){#main-nav{gap:15px}.nav-shell{gap:18px}.nav-utilities{gap:12px}.site-header .sign-in{display:none}}
+@media(min-width:1001px) and (max-width:1180px){.nav-report{font-size:13px}#main-nav{gap:12px}.nav-cta{padding-left:12px;padding-right:12px}.nav-cta>.icon{display:none}}
+@media(max-width:1000px){.nav-report{padding:17px 0;border-bottom:1px solid var(--line);font-size:17px}}

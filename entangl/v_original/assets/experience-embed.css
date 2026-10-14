@@ -1,0 +1,18 @@
+/* Preserve the original facility interactions inside the new sitemap. */
+html[data-embed=model],html[data-embed=model] body{background:#f4f5ef!important;overflow:hidden!important}
+html[data-embed=model] .site-header,html[data-embed=model] .site-footer,html[data-embed=model] .skip-link,html[data-embed=model] main>section:not(.hero),html[data-embed=model] .hero-copy,html[data-embed=model] .hero-footer,html[data-embed=model] .floating-card,html[data-embed=model] .scene-disclaimer,html[data-embed=model] .scene-header,html[data-embed=model] .facility-caption,html[data-embed=model] .scene-bottom{display:none!important}
+html[data-embed=model] .hero{display:block!important;width:100%!important;max-width:none!important;padding:0!important;margin:0!important;min-height:100vh!important;height:100vh!important}
+html[data-embed=model] #hero-scene{width:100%!important;height:100vh!important;min-height:0!important;padding:0!important;margin:0!important}
+html[data-embed=model] .facility-viewport{inset:0 0 52px 0!important}
+html[data-embed=model] .facility-tools{bottom:-36px!important;right:18px!important;left:auto!important;gap:4px!important;padding:5px!important;box-shadow:none!important}
+html[data-embed=model] .facility-tools button{width:32px!important;height:32px!important}
+html[data-embed=model] .facility-hint{font-size:12px!important;bottom:-26px!important;left:18px!important;line-height:1.5!important;max-width:150px}
+html[data-embed=model] .pin-label{font-size:12px!important;padding:9px 11px!important}
+html[data-embed=model] .facility-selection{bottom:55px!important;font-size:14px!important}
+html[data-embed=model] .facility-selection small,html[data-embed=model] .facility-selection p,html[data-embed=model] .selection-link{font-size:14px!important;line-height:1.5!important}
+html[data-embed=model] .is-expanded{inset:0!important}
+html[data-embed=model] .is-expanded .facility-tools{bottom:16px!important}
+html[data-embed=model] .is-expanded .facility-hint{bottom:24px!important}
+.experience-return{position:fixed;bottom:18px;right:18px;z-index:100;background:#183d31;color:#fff;border-radius:4px;padding:12px 18px;font-size:14px;box-shadow:0 3px 20px #0002}
+html[data-embed=model] .experience-return{display:none}
+@media(max-width:480px){html[data-embed=model] .facility-tools{right:8px!important;gap:0!important}html[data-embed=model] .facility-tools button{width:29px!important}html[data-embed=model] .facility-hint{left:10px!important;font-size:12px!important;max-width:90px}html[data-embed=model] .pin-label{font-size:12px!important}}
