@@ -1,0 +1,12 @@
+/reports/*
+  X-Robots-Tag: noindex, noarchive
+  X-Content-Type-Options: nosniff
+
+/reports/Entangl-Data-Center-Outages-2025-2026.pdf
+  Content-Disposition: attachment; filename="Entangl-Data-Center-Outages-2025-2026.pdf"
+
+/outage-report/thank-you/*
+  X-Robots-Tag: noindex, noarchive
+
+/outage-report/email-preview/*
+  X-Robots-Tag: noindex, noarchive

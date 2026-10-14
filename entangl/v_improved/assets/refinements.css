@@ -1,0 +1,121 @@
+/* Refinements layered over the original stylesheets. Loaded last on every page.
+   Each block names the finding it fixes in entangl/analysis/AUDIT.md.
+   Nothing here changes the layout, palette or type scale; it removes friction. */
+
+@keyframes ref-fade{from{opacity:0}}
+@keyframes ref-rise{from{opacity:0;transform:translateY(6px)}}
+@keyframes ref-drop{from{opacity:0;transform:translateY(-6px)}}
+@keyframes ref-dialog{from{opacity:0;transform:translateY(10px) scale(.985)}}
+
+/* A2 · Headings break into balanced lines; paragraphs avoid a lone last word. */
+h1,h2,h3,h4,.eyebrow,.life-eyebrow,.value-eyebrow,.pp-kicker{text-wrap:balance}
+p,li,dd,figcaption{text-wrap:pretty}
+
+/* A3 · A statistic and its unit stay together ("$10k", never "$10" / "k"). */
+.value-stat{white-space:nowrap}
+
+/* A4 · Secondary text at AA contrast (4.6:1 or better): same hues, one step darker. */
+:root{--muted:#5c6b61}
+.copy-block .section-index{color:#5f7553}
+.chapter-number{color:#617555}
+.pp-detail-number{color:#5e6f4f}
+.copy-question{color:#5c774a}
+.pp-related small{color:#617553}
+.pp-promises small{color:#637459}
+.pp-kicker{color:#596f50}
+.pp-workflow-top{color:#577245}
+.pp-findings small{color:#5b734e}
+.calculator-inputs small{color:#5c6f50}
+#outcomes .pressure-index-number{color:#64754f}
+#outcomes .pressure-history-marks>button{color:#617050}
+#outcomes .pressure-control small{color:#597442}
+#outcomes .pressure-tag{color:#5d734b}
+
+/* A5 · No interface label below 12px. */
+.life-stage-number,.life-hero .life-hero-scroll-cue,.moment-tabs>button>span{font-size:12px}
+.life-panel-chapter,.life-hero[data-life-mobile="true"] .life-panel-chapter{font-size:12px}
+.life-hero .life-scene-facts>span,.life-model-hint{font-size:12px}
+@media (max-width:760px){.breadcrumb{font-size:12px}}
+
+/* A6 · Report figures share a top line even when one label wraps. */
+.report-facts>div{justify-content:flex-end}
+
+/* B1 · Tap targets. Footer links get a full-row hit area without moving a pixel:
+   padding replaces the 8px collapsing margins. On touch the rows open to 40px. */
+.footer-group{--hit:4px}
+.footer-group>a{padding-block:var(--hit);margin-block:0}
+.footer-group>a:first-of-type{margin-top:calc(-1 * var(--hit))}
+.footer-group>a:last-of-type{margin-bottom:calc(8px - var(--hit))}
+.footer-bottom>div>a,.footer-bottom>div>button{padding:12px 4px;margin:-12px -4px}
+.nav-cta{min-height:44px}
+@media (max-width:1000px){
+  .menu-button{display:grid;place-items:center;min-width:44px;min-height:44px;padding:0;margin-right:-11px}
+}
+@media (pointer:coarse){
+  .footer-group{--hit:9px}
+  .text-link,.pp-link{min-height:44px}
+  .life-hero .life-view-controls>button,.life-view-controls>button{width:40px;height:40px}
+}
+
+/* B2 · Touch gets a pressed state; the site removes the system tap highlight. */
+@media (hover:none){
+  a:active,button:not(:disabled):active,summary:active,label:active{opacity:.72}
+}
+
+/* B3 · The mobile menu arrives and leaves; the page beneath rests under a scrim. */
+@media (max-width:1000px){
+  #main-nav{display:block;visibility:hidden;opacity:0;transform:translateY(-6px);pointer-events:none;
+    overscroll-behavior:contain;transition:opacity .2s var(--ease),transform .2s var(--ease),visibility 0s linear .2s}
+  #main-nav.mobile-open{visibility:visible;opacity:1;transform:none;pointer-events:auto;
+    transition:opacity .2s var(--ease),transform .2s var(--ease),visibility 0s}
+  html.ref-nav-open{overflow:hidden;scrollbar-gutter:stable}
+  html.ref-nav-open body::after{content:"";position:fixed;inset:0;z-index:49;background:#0d221b4d;animation:ref-fade .2s var(--ease)}
+}
+
+/* B7 · A modal dialog holds the page still behind it. */
+html:has(dialog[open]){overflow:hidden;scrollbar-gutter:stable}
+
+/* B6 · The moment tabs scroll sideways on phones; fade the edge that has more. */
+.moment-tabs.ref-more-end{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),#0000);mask-image:linear-gradient(90deg,#000 calc(100% - 56px),#0000)}
+.moment-tabs.ref-more-start{-webkit-mask-image:linear-gradient(90deg,#0000,#000 56px);mask-image:linear-gradient(90deg,#0000,#000 56px)}
+.moment-tabs.ref-more-start.ref-more-end{-webkit-mask-image:linear-gradient(90deg,#0000,#000 56px,#000 calc(100% - 56px),#0000);mask-image:linear-gradient(90deg,#0000,#000 56px,#000 calc(100% - 56px),#0000)}
+
+/* B5 / C1 · Swapped content settles in instead of cutting. All of this is switched
+   off by the site's own reduced-motion rules (OS setting and the in-page toggle). */
+.nav-group[open]>.nav-dropdown{animation:ref-drop .18s var(--ease)}
+@media (max-width:1000px){.nav-group[open]>.nav-dropdown{animation-name:ref-fade}}
+dialog[open]{animation:ref-dialog .22s var(--ease)}
+dialog[open]::backdrop{animation:ref-fade .22s var(--ease)}
+.value-panel:not([hidden]){animation:ref-fade .26s var(--ease)}
+#moment-panel.ref-swap :is(#moment-question,#moment-answer,#moment-status,#moment-record,#moment-count){animation:ref-rise .26s var(--ease)}
+#review-panel>*,#procurement-body>*,#procedure-output>*{animation:ref-fade .22s var(--ease)}
+
+/* C2 · The model is drawn by script; keep its frame unseen until the script has
+   placed it, then let it arrive, instead of dropping into place after first paint. */
+.life-hero:not(.life-hero-enhanced) .life-world-anchor{opacity:0}
+.life-hero.life-hero-enhanced .life-world-anchor{animation:ref-fade .5s var(--ease)}
+
+/* D1 · The lifecycle reading column. When it is taller than the screen, its
+   one-line descriptions step aside (as they already do on phones) so the
+   interactive card fits; any remaining overflow fades at the edge to show more. */
+.life-hero[data-life-mobile="false"] .life-hero-panel.ref-compact .life-stage-features p{display:none}
+.life-hero[data-life-mobile="false"] .life-hero-panel.ref-compact .life-panel-heading{margin-bottom:16px}
+.life-hero[data-life-mobile="false"] .life-hero-panel.ref-compact .life-panel-heading>p{margin-top:8px}
+.life-hero[data-life-mobile="false"] .life-hero-panel.ref-compact .life-stage-features{gap:10px;margin-bottom:16px}
+.life-hero[data-life-mobile="false"] .life-hero-panel.ref-compact .life-hero-demo{padding:14px 16px 13px}
+.life-hero .life-hero-panel.ref-more{-webkit-mask-image:linear-gradient(#000 calc(100% - 32px),#0000);mask-image:linear-gradient(#000 calc(100% - 32px),#0000)}
+
+/* D2 · The scene legend ends before the camera controls instead of under them. */
+.life-hero[data-life-mobile="false"] .life-scene-facts{right:262px}
+
+/* D3 · Short landscape screens (phones turned sideways): a compact header gives
+   the content back a fifth of the screen; the pinned story fits the real height. */
+@media (orientation:landscape) and (max-height:500px){
+  .nav-shell{min-height:56px}
+  html{scroll-padding-top:72px}
+  .life-section.life-hero .life-hero-sticky{min-height:0}
+  .life-hero[data-life-mobile="false"] #life-moment-title{font-size:22px;line-height:1.15}
+  .life-hero[data-life-mobile="false"] #life-moment-copy{font-size:13px;line-height:1.45}
+  .life-hero[data-life-mobile="false"] .life-stage-features p{display:none}
+  .life-hero[data-life-mobile="false"] .life-hero-scroll-cue{display:none}
+}
