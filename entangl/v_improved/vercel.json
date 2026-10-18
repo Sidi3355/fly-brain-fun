@@ -1,0 +1,28 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "headers": [
+    {
+      "source": "/reports/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, noarchive" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
+    {
+      "source": "/reports/Entangl-Data-Center-Outages-2025-2026.pdf",
+      "headers": [
+        { "key": "Content-Disposition", "value": "attachment; filename=\"Entangl-Data-Center-Outages-2025-2026.pdf\"" }
+      ]
+    },
+    {
+      "source": "/outage-report/thank-you/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, noarchive" }]
+    },
+    {
+      "source": "/outage-report/email-preview/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, noarchive" }]
+    }
+  ]
+}
