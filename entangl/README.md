@@ -26,7 +26,8 @@ Every path is root-absolute (`/assets/site.css`), so each version must be served
 Either folder deploys as-is to any static host that uses directory-index routing:
 - **Cloudflare (Pages or Workers static assets):** this is what entangl.com runs on, and it honours `_headers`.
 - **Netlify:** honours `_headers`.
-- **Vercel or GitHub Pages:** both work, but they ignore `_headers`. Its only rules are `noindex` on the report and thank-you pages, and a download filename for the PDF.
+- **Vercel:** `v_improved` is live at https://entangl-site.vercel.app (project `entangl-site`, root directory `entangl/v_improved`). Vercel ignores `_headers`, so `v_improved/vercel.json` carries the same rules plus entangl.com's trailing-slash routing. Copy that file into `v_original` to deploy it the same way.
+- **GitHub Pages:** works, but ignores `_headers`. Its only rules are `noindex` on the report and thank-you pages, and a download filename for the PDF.
 
 ## How faithful the mirror is
 
