@@ -78,4 +78,110 @@
     document.fonts?.ready.then(queue);
     queue();
   }
+
+  // ───────────── Round 2 · UI polish (analysis/UI-REVIEW.md) ─────────────
+  const ease = 'cubic-bezier(.2,.7,.2,1)';
+
+  // U5 · Accordions open and close with their height instead of jumping. The mobile menu's
+  // groups animate too; the desktop mega-menu (an overlay) keeps its own entrance.
+  const toggleDetails = (d, open) => {
+    for (const a of d.getAnimations()) a.cancel();
+    const token = (d.__refToken = {});
+    const start = d.getBoundingClientRect().height;
+    d.open = open; const end = d.getBoundingClientRect().height; d.open = true;
+    d.classList.add('ref-moving');
+    const done = () => { if (d.__refToken !== token) return; d.classList.remove('ref-moving'); if (!open) d.open = false; };
+    const anim = d.animate({ height: [start + 'px', end + 'px'] }, { duration: Math.min(420, 180 + Math.abs(end - start) * .35), easing: ease });
+    anim.onfinish = done; anim.oncancel = done;
+    if (open) for (const c of d.children) if (c.tagName !== 'SUMMARY') c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, delay: 60, easing: ease, fill: 'backwards' });
+  };
+  document.addEventListener('click', e => {
+    const summary = e.target.closest('summary'), d = summary?.parentElement;
+    if (!d || d.tagName !== 'DETAILS' || summary !== d.querySelector(':scope > summary') || reduced()) return;
+    if (d.classList.contains('nav-group') && !narrow.matches) return;
+    e.preventDefault();
+    toggleDetails(d, !d.open);
+  });
+
+  // U6 · When a panel's content is swapped, the panel eases to its new height instead of
+  // jumping (changes caused by a window resize are left alone).
+  const smoothHeight = el => {
+    let last = el.getBoundingClientRect(), busy = false;
+    new ResizeObserver(() => {
+      const now = el.getBoundingClientRect();
+      if (busy) return;
+      const dh = now.height - last.height, sameWidth = Math.abs(now.width - last.width) < 1;
+      const from = last.height; last = now;
+      if (Math.abs(dh) < 3 || !sameWidth || reduced()) return;
+      busy = true; el.style.overflow = 'hidden';
+      const anim = el.animate({ height: [from + 'px', now.height + 'px'] }, { duration: Math.min(380, 170 + Math.abs(dh) * .3), easing: ease });
+      const done = () => { busy = false; el.style.overflow = ''; last = el.getBoundingClientRect(); };
+      anim.onfinish = done; anim.oncancel = done;
+    }).observe(el);
+  };
+  document.querySelectorAll('.value-panels, .review-content, #review-panel, .requirement-detail, #procurement-body, #pp-scene, #pressure-evidence-card, .calculator-result').forEach(smoothHeight);
+
+  // U7 · Sections arrive as they come into view: headings, their kickers and intro lines, and the
+  // cards of the pressure index rise and fade in once. Anything on screen at load is left as is.
+  if ('IntersectionObserver' in window && !reduced()) {
+    const picks = [...document.querySelectorAll('main section h2, main section h2 + p, main .eyebrow, main .pressure-index > a, main .proof-band a, main .pp-section-heading > *')]
+      .filter(el => !el.closest('.life-hero, .site-header, .site-footer, dialog, [hidden], .value-panel, #pp-scene'));
+    // The arrival is an animation rather than a transition, so it plays whatever the element's own
+    // rules say and leaves its hover transitions untouched once it is done.
+    const order = new WeakMap();
+    const io = new IntersectionObserver(entries => entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      const el = en.target; io.unobserve(el);
+      el.classList.remove('ref-reveal');
+      if (!reduced()) el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: (order.get(el) || 0) * 70, easing: ease, fill: 'backwards' });
+    }), { rootMargin: '0px 0px -6% 0px' });
+    const groups = new Map();
+    for (const el of picks) {
+      const r = el.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) continue;
+      const i = groups.get(el.parentElement) || 0; groups.set(el.parentElement, i + 1);
+      order.set(el, Math.min(i, 5));
+      el.classList.add('ref-reveal'); io.observe(el);
+    }
+  }
+
+  // U9 · Pressure lab time bars: a segment too narrow for its label shows the colour alone
+  // (the label stays in the segment's title).
+  const track = $('#pressure-day-track');
+  if (track) {
+    const fit = () => track.querySelectorAll('.pressure-time-segment').forEach(seg => seg.classList.toggle('ref-tight', seg.scrollWidth > seg.clientWidth + 1));
+    new MutationObserver(fit).observe(track, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+    new ResizeObserver(fit).observe(track);
+  }
+
+  // U10 · Content swapped in place dissolves from its previous state instead of cutting: a snapshot
+  // of what was there fades out over the new content, so parts that did not change stay perfectly
+  // still and only what changed visibly moves. Skipped while a slider is dragged or text is typed.
+  const dissolve = el => {
+    const snap = () => [...el.childNodes].filter(n => !n.classList?.contains('ref-ghost')).map(n => n.cloneNode(true));
+    let before = snap(), height = el.offsetHeight;
+    const mo = new MutationObserver(() => {
+      const prev = before, prevHeight = height;
+      before = snap(); height = el.offsetHeight;
+      const a = document.activeElement;
+      if (reduced() || !el.getClientRects().length || !prevHeight) return;
+      if (a?.matches('input[type=range], input[type=number], input[type=text], input[type=search], textarea')) return;
+      if (el.closest('.life-section')?.querySelector('.life-ghost')) return;   // a stage handover is already moving
+      mo.disconnect();
+      el.querySelectorAll(':scope > .ref-ghost').forEach(g => g.remove());
+      const ghost = el.cloneNode(false);
+      for (const at of ['id', 'role', 'tabindex', 'aria-labelledby', 'aria-live', 'aria-busy', 'aria-label']) ghost.removeAttribute(at);
+      ghost.classList.add('ref-ghost'); ghost.setAttribute('aria-hidden', 'true'); ghost.inert = true;
+      for (const n of prev) { if (n.nodeType === 1) { n.removeAttribute('id'); n.querySelectorAll('[id]').forEach(x => x.removeAttribute('id')); } ghost.append(n); }
+      ghost.style.height = prevHeight + 'px';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.append(ghost);
+      watch();
+      ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: 'cubic-bezier(0,0,.2,1)', fill: 'forwards' })
+        .finished.then(() => { mo.disconnect(); ghost.remove(); watch(); }, () => {});
+    });
+    const watch = () => mo.observe(el, { childList: true, characterData: true, subtree: true });
+    watch();
+  };
+  document.querySelectorAll('#review-panel, #procurement-body, .requirement-detail, #pp-scene, #life-interaction, #pressure-evidence-card, [data-pressure-stage="uptime"], [data-pressure-stage="response"]').forEach(dissolve);
 })();

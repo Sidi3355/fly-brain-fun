@@ -109,10 +109,30 @@
   const $$ = (selector,scope=root) => [...scope.querySelectorAll(selector)];
   const announce = message => {$('.pressure-live').textContent=message;};
   const sectionForInput = {sites:'scale',procedures:'scale',hours:'scale',reviewWait:'efficiency',fieldWait:'efficiency',history:'visibility',load:'growth'};
+  // Demos patch their markup in place rather than rebuilding it, so the transitions declared in
+  // pressure-lab.css (dimming routes, drawing wires, resizing tiles and bars) can actually play,
+  // and only content that is genuinely new fades in.
+  const still=()=>matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.classList.contains('reduce-motion');
+  const arrive=node=>{if(node.nodeType===1&&!still())node.animate?.([{opacity:0},{opacity:1}],{duration:260,easing:'cubic-bezier(.2,.7,.2,1)'});return node;};
+  function patch(current,fresh){
+    for(let i=0;i<fresh.childNodes.length;i++){
+      const next=fresh.childNodes[i],old=current.childNodes[i];
+      if(!old){current.append(arrive(next.cloneNode(true)));continue;}
+      if(old.nodeType!==next.nodeType||old.nodeName!==next.nodeName){old.replaceWith(arrive(next.cloneNode(true)));continue;}
+      if(next.nodeType===3){if(old.nodeValue!==next.nodeValue)old.nodeValue=next.nodeValue;continue;}
+      if(next.nodeType!==1)continue;
+      for(const a of [...old.attributes])if(!next.hasAttribute(a.name))old.removeAttribute(a.name);
+      for(const a of [...next.attributes])if(old.getAttribute(a.name)!==a.value)old.setAttribute(a.name,a.value);
+      if(/^(INPUT|SELECT|TEXTAREA)$/.test(old.nodeName)&&old!==document.activeElement&&old.value!==next.value)old.value=next.value;
+      patch(old,next);
+    }
+    while(current.childNodes.length>fresh.childNodes.length)current.lastChild.remove();
+  }
+  function morph(el,html){const fresh=document.createElement('div');fresh.innerHTML=html;patch(el,fresh);}
   function renderDemo(key,focusSelector) {
     const section=pressureSections.find(s=>s.key===key);
     const stage=$(`[data-pressure-stage="${key}"]`);
-    stage.innerHTML=section.render();
+    morph(stage,section.render());
     if(focusSelector)$(focusSelector,stage)?.focus({preventScroll:true});
   }
   function updatePressureNumbers(section) {
@@ -120,16 +140,16 @@
       const d=pressureWorkload(pressure.sites,pressure.procedures,pressure.hours);
       $('#pressure-hours-total').textContent=pressureNum(d.hours);$('#pressure-reviews').textContent=d.reviews;$('#pressure-days').textContent=pressureNum(d.days);
       $('#pressure-equation').textContent=`${pressure.sites} sites × ${pressure.procedures} procedures × ${pressure.hours} hours`;
-      $('#pressure-sites-grid').innerHTML=pressureSiteTiles();
+      morph($('#pressure-sites-grid'),pressureSiteTiles());
     }
     if(section==='efficiency') {
       const d=pressureDelays(pressure.reviewWait,pressure.fieldWait);
       $('#pressure-total').textContent=`${pressureTime(d.total)} elapsed`;$('#pressure-wait').textContent=pressureTime(d.waiting);$('#pressure-wait-percent').textContent=`${d.percent}%`;
-      $('#pressure-day-track').innerHTML=pressureTimelineBars();$('#pressure-day-track').setAttribute('aria-label',`${d.waiting} minutes waiting and 90 minutes working`);
+      morph($('#pressure-day-track'),pressureTimelineBars());$('#pressure-day-track').setAttribute('aria-label',`${d.waiting} minutes waiting and 90 minutes working`);
       $('#pressure-review-label').textContent=pressureTime(pressure.reviewWait);$('#pressure-field-label').textContent=pressureTime(pressure.fieldWait);
     }
     if(section==='visibility') {
-      const e=pressureEvents[pressure.history];$('#pressure-evidence-card').innerHTML=pressureEvidenceCard();
+      const e=pressureEvents[pressure.history];morph($('#pressure-evidence-card'),pressureEvidenceCard());
       $('#pressure-history-output').textContent=`${e.time} · ${e.title}`;$('#pressure-history').setAttribute('aria-valuetext',`${e.time}, ${e.title}`);
       $$('[data-pressure-history]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.pressureHistory)===pressure.history)));
       $$('[data-pressure-audience]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.pressureAudience===pressure.audience)));

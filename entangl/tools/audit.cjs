@@ -56,6 +56,8 @@ const INSTRUMENT = () => {
 
 // Runs in the page after load: static measurements of the rendered layout.
 const MEASURE = ({ touchDevice }) => {
+  // Content waiting to reveal on scroll (v_improved) counts as visible: measure it settled.
+  document.querySelectorAll('.ref-reveal').forEach(e => e.classList.remove('ref-reveal'));
   const vw = document.documentElement.clientWidth;
   const out = {};
   const visible = el => {

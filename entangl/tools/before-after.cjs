@@ -33,6 +33,12 @@ const SHOTS = {
   'D1-lifecycle-1440x900': { page: '/', dev: laptop, steps: [stage(5), { wait: 900 }] },
   'D1-lifecycle-phone': { page: '/', dev: phone, steps: [stage(1), { wait: 900 }] },
   'D3-lifecycle-landscape': { page: '/', dev: landscape, steps: [stage(2), { wait: 900 }] },
+  'U2-scene-phone-stage1': { page: '/', dev: phone, steps: [stage(0), { wait: 1200 }] },
+  'U2-scene-phone-stage4': { page: '/', dev: phone, steps: [stage(3), { wait: 1200 }] },
+  'U3-scene-1280x720-stage1': { page: '/', dev: laptopSmall, steps: [stage(0), { wait: 1200 }] },
+  'U3-scene-1440x900-stage5': { page: '/', dev: laptop, steps: [stage(4), { wait: 1200 }] },
+  'U9-pressure-trace-phone': { page: '/', dev: phone, steps: [at('#pressure-uptime', 80), { eval: [() => document.querySelector('[data-pressure-asset="cooling"]')?.click()] }, { wait: 300 }, { eval: [() => document.querySelector('[data-pressure-action="trace"]')?.click()] }, { wait: 1200 }, at('.pressure-network', 140)] },
+  'U9-pressure-chart-phone': { page: '/', dev: phone, steps: [at('.pressure-demand-chart', 160)] },
 };
 
 async function capture(browser, base, shot) {

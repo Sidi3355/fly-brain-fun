@@ -7,6 +7,7 @@ A self-contained folder, ready to move into its own repository. The content and 
 | `v_original/` | Byte-for-byte mirror of entangl.com as served on 14 October 2026: all 28 pages, every asset, the 18 MB outage report, `robots.txt`, `sitemap.xml`, `_headers` and the custom 404. |
 | `v_improved/` | The same site with the fixes from the audit applied. Same pages, words, layout, palette and interactions; the friction is removed. |
 | `analysis/AUDIT.md` | What was measured, in which scenarios, every finding with its evidence, and the before/after numbers. |
+| `analysis/UI-REVIEW.md` | Round 2: overlaps and transitions measured frame by frame, what was rebuilt, and the results. |
 | `analysis/screenshots/` | Before/after pairs for the fixes you can see. |
 | `tools/` | The scripts used to mirror, serve, verify and audit the site. They can be rerun against any deployment. |
 
@@ -82,6 +83,16 @@ Diff the two folders to see every line:
 diff -ru v_original v_improved
 ```
 
+### Round 2: motion and layering
+
+After round 1 the site still looked and felt like the original, because round 1 had deliberately touched only friction. Round 2 measured what you notice by watching: what happens between states, and what sits on top of what. Details are in `analysis/UI-REVIEW.md`.
+
+- **The numbered lifecycle stages hand over.** The outgoing copy lifts away while the new copy settles in from the direction of travel. The rail fills continuously with scroll and reaches each number as that stage takes over, and the counter rolls.
+- **Nothing in the 3D scene sits on anything else.** Labels and pins find clear spots, with hairlines back to their dots. The model is fitted above its controls, the legend sits beside the status line, and the camera eases.
+- **Demos change instead of being rebuilt.** The platform demos and the pressure lab patch their markup in place, so state changes transition, scroll positions and focus survive, and swapped content dissolves rather than blinking.
+- **Accordions and panels.** Accordions open with their height, swapped panels ease to their new height, and sections fade up once as they arrive.
+- **Bugs fixed.** Searching the answers for "copy" or "link" no longer matches every question (the search was reading each question's copy-link button). Hall 02 now lights when CRAH-02 is traced. Four smaller bugs are fixed too: calculator state, a scroll jump, a hover rule and an anchor offset.
+
 ## Things to know before moving it
 
 - **The forms are live.** `/demo/`, `/outage-report/` and the `/experience/` booking form post to `formsubmit.co` for `shapol@entangl.ai`. A deployed copy, or a local one, sends real enquiries if someone submits. The audit tools block those requests.
@@ -101,3 +112,6 @@ Python 3 and Node 18+; the browser tools need Playwright (`npm i -D playwright`)
 | `interactions.cjs BASE [OUT.json]` | Scripted checks of the menu, dialog, tabs, anchors and forms. |
 | `storyboard.cjs BASE OUT` | What a reader sees while scrolling, as contact sheets. |
 | `before-after.cjs A B OUT` | The side-by-side images in `analysis/screenshots/`. |
+| `overlaps.cjs BASE OUT` | Visible text, icon and control collisions on every page, at each scroll position and lifecycle stage. |
+| `model-overlaps.cjs BASE [OUT.json]` | Collisions inside the 3D scene (canvas labels, pins, controls, legend) and how much of the drawing sits under the controls. |
+| `transitions.cjs BASE [OUT.json]` | Frame-by-frame capture of state changes: cut or transition, and how long. |

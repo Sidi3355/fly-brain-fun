@@ -175,15 +175,23 @@
   let state=clone(defaults[key]),announceTimer;
   const $=s=>root.querySelector(s);
   // Keep native range elements mounted during a drag, including their pointer state.
+  // Every redraw patches the scene in place, so states can transition, inner scroll positions and
+  // focus survive, and only content that is genuinely new fades in.
+  const still=()=>matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.classList.contains('reduce-motion');
+  const enter=node=>{if(node.nodeType===1&&!still())node.animate?.([{opacity:0},{opacity:1}],{duration:260,easing:'cubic-bezier(.2,.7,.2,1)'});return node;};
   function reconcileChildren(current, fresh) {
     for(let i=0;i<fresh.childNodes.length;i++){
       const next=fresh.childNodes[i],old=current.childNodes[i];
-      if(!old){current.append(next.cloneNode(true));continue;}
-      if(old.nodeType!==next.nodeType||old.nodeName!==next.nodeName){old.replaceWith(next.cloneNode(true));continue;}
+      if(!old){current.append(enter(next.cloneNode(true)));continue;}
+      if(old.nodeType!==next.nodeType||old.nodeName!==next.nodeName){old.replaceWith(enter(next.cloneNode(true)));continue;}
       if(next.nodeType===3){if(old.nodeValue!==next.nodeValue)old.nodeValue=next.nodeValue;continue;}
       if(next.nodeType!==1)continue;
       for(const attr of [...old.attributes])if(!next.hasAttribute(attr.name))old.removeAttribute(attr.name);
       for(const attr of [...next.attributes])if(old.getAttribute(attr.name)!==attr.value)old.setAttribute(attr.name,attr.value);
+      if(/^(INPUT|SELECT|TEXTAREA)$/.test(old.nodeName)&&old!==document.activeElement){
+        if(old.type==='checkbox'||old.type==='radio'){if(old.checked!==next.checked)old.checked=next.checked;}
+        else if(old.value!==next.value)old.value=next.value;
+      }
       reconcileChildren(old,next);
     }
     while(current.childNodes.length>fresh.childNodes.length)current.lastChild.remove();
@@ -191,9 +199,7 @@
   function draw(message='Example updated.') {
     const active=document.activeElement,focusId=root.contains(active)?active.id:null;
     const selector=root.contains(active)?[...active.attributes].filter(a=>a.name.startsWith('data-pp-')).map(a=>`[${a.name}="${CSS.escape(a.value)}"]`).join(''):'';
-    if(active?.matches('input[type="range"]')&&root.contains(active)){
-      const fresh=document.createElement('div');fresh.innerHTML=renderScene(key,state);reconcileChildren($('#pp-scene'),fresh);
-    }else $('#pp-scene').innerHTML=renderScene(key,state);
+    const fresh=document.createElement('div');fresh.innerHTML=renderScene(key,state);reconcileChildren($('#pp-scene'),fresh);
     const next=focusId?document.getElementById(focusId):selector?$(selector):null;
     if(next&&!next.disabled)next.focus({preventScroll:true});
     clearTimeout(announceTimer);announceTimer=setTimeout(()=>{$('#pp-live').textContent=message;},150);

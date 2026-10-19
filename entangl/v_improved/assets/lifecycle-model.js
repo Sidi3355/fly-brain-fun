@@ -519,7 +519,7 @@ window.createEntanglLifecycleModel = function(root,onSelect) {
   let canvas=$('.life-canvas');const fxCanvas=$('.life-effects'),fx=fxCanvas.getContext('2d');
   if(!fx)throw new Error('Canvas unavailable');
   const state={yaw:.59,elev:.65,zoom:1,width:1,height:1,dpr:1,visible:false,drag:false,paused:false,rendered:0,time:0};
-  const initialCamera={yaw:state.yaw,elev:state.elev,zoom:state.zoom};
+  const initialCamera={yaw:state.yaw,elev:state.elev,zoom:state.zoom},view={...initialCamera};
   let scenario={moment:0,launch:false,work:'ups',workDone:{ups:false,cooling:false},incident:1,teamView:'people',handover:false,demand:800,expansion:true,audience:'operator',record:0,layer:'overview'};
   let camera,animationId=0,dirty=true,pendingViewport=null,anchor=null,lastFrame=0,lastRender=0;
   let lastScene={objects:[],actors:[],props:[],labels:[],facts:[]};
@@ -556,8 +556,10 @@ window.createEntanglLifecycleModel = function(root,onSelect) {
     const xx=corners.map(p=>dot(p,right)),yy=corners.map(p=>dot(p,up));
     const minx=Math.min(...xx),maxx=Math.max(...xx),miny=Math.min(...yy),maxy=Math.max(...yy);
     const fitHeight=scenario.presentation==='hero'?.94:.81;
-    const scale=Math.min(state.width*.96/(maxx-minx),state.height*fitHeight/(maxy-miny))*state.zoom;
-    return {dir,right,up,scale,cx:state.width*.50-(minx+maxx)*.5*scale,cy:state.height*.51+(miny+maxy)*.5*scale};
+    // In the hero the camera controls own a band along the bottom edge: fit the drawing above it.
+    const avail=Math.max(80,state.height-chromeReserve());
+    const scale=Math.min(state.width*.96/(maxx-minx),avail*fitHeight/(maxy-miny))*state.zoom;
+    return {dir,right,up,scale,cx:state.width*.50-(minx+maxx)*.5*scale,cy:avail*.51+(miny+maxy)*.5*scale};
   }
   const project=p=>[camera.cx+dot(p,camera.right)*camera.scale,camera.cy-dot(p,camera.up)*camera.scale,dot(p,camera.dir)];
   const VS=`
@@ -900,38 +902,91 @@ window.createEntanglLifecycleModel = function(root,onSelect) {
     ctx.globalAlpha=1;
   }
   let captionKey='',factsKey='';
+  const labelSeen=new Map();
+  function placeLabel(p,w,h,obstacles,seen){
+    const top=75,bottom=state.height-114,fit=(x,y)=>({x:clamp(x,12,state.width-w-12),y:clamp(y,top,bottom)});
+    const tries=[[p[0]-w/2,p[1]-38],[p[0]-w/2,p[1]-74],[p[0]-w/2,p[1]+18],[p[0]+16,p[1]-h/2],[p[0]-w-16,p[1]-h/2],[p[0]-w*.15,p[1]-38],[p[0]-w*.85,p[1]-38],[p[0]-w/2,p[1]-110],[p[0]-w/2,p[1]+54],[p[0]+16,p[1]-h-20],[p[0]-w-16,p[1]-h-20]];
+    const cost=s=>{let c=0;for(const o of obstacles){const ox=Math.min(s.x+w,o.x+o.w)-Math.max(s.x,o.x)+4,oy=Math.min(s.y+h,o.y+o.h)-Math.max(s.y,o.y)+4;if(ox>0&&oy>0)c+=ox*oy;}return c;};
+    const kept=seen.slot>=0&&fit(...tries[seen.slot]);if(kept&&!cost(kept))return kept;   // stay put while the spot is still clear
+    for(let i=0;i<tries.length;i++){const s=fit(...tries[i]);if(!cost(s)){seen.slot=i;return s;}}
+    // Crowded (a small scene): the clear spot nearest the point, or else the least covered one.
+    const held=seen.slot<0&&fit(p[0]+seen.dx,p[1]+seen.dy);if(held&&!cost(held))return held;
+    const span=(a,b,step)=>{const v=[];for(let n=a;n<b;n+=step)v.push(n);v.push(b);return v;};
+    let best=fit(...tries[0]),bestCost=Infinity,bestD=Infinity;
+    for(const y of span(top,bottom,3))for(const x of span(12,state.width-w-12,6)){
+      const s=fit(x,y),c=cost(s);if(c>bestCost)continue;
+      const d=Math.hypot(s.x+w/2-p[0],s.y+h/2-p[1]);if(c<bestCost||d<bestD){best=s;bestCost=c;bestD=d;}
+    }
+    seen.slot=-1;seen.dx=best.x-p[0];seen.dy=best.y-p[1];
+    return best;
+  }
   function overlay(scene){
     fx.setTransform(fxCanvas.width/state.width,0,0,fxCanvas.height/state.height,0,0);fx.clearRect(0,0,state.width,state.height);
     const compact=state.width<560;
     const chosen=compact?scene.labels.slice(0,1):scene.labels;
-    const labelRects=[];
+    const pinRects=updatePins(),labelRects=[],now=performance.now(),live=new Set();
+    let fading=false;
     for(const l of chosen){
       const p=project(l.point),text=l.text,fs=compact?11:12;
       fx.font=`500 ${fs}px Arial`;const w=fx.measureText(text).width+22,h=29;
-      let x=clamp(p[0]-w/2,12,state.width-w-12),y=clamp(p[1]-38,75,state.height-114);
-      for(const other of labelRects)if(x<other.x+other.w&&x+w>other.x&&y<other.y+other.h+5&&y+h>other.y)y=other.y-36;
+      const seen=labelSeen.get(text)||{born:now,slot:0};labelSeen.set(text,seen);live.add(text);
+      const {x,y}=placeLabel(p,w,h,[...pinRects,...labelRects],seen);
+      // A label that has to jump to a new spot fades in there instead of teleporting.
+      const off=[x-p[0],y-p[1]];if(seen.off&&Math.hypot(off[0]-seen.off[0],off[1]-seen.off[1])>12)seen.born=now;seen.off=off;
       labelRects.push({x,y,w,h});
-      fx.beginPath();fx.moveTo(p[0],p[1]);fx.lineTo(clamp(p[0],x+10,x+w-10),y+h);fx.lineWidth=1;fx.strokeStyle=l.tone==='amber'?'#e7b582bb':'#dbeab099';fx.stroke();
+      const alpha=reduced()?1:Math.min(1,(now-seen.born)/280);if(alpha<1)fading=true;
+      const lx=y+h<=p[1]||y>=p[1]?clamp(p[0],x+10,x+w-10):p[0]<x?x:x+w,ly=y+h<=p[1]?y+h:y>=p[1]?y:clamp(p[1],y+6,y+h-6);
+      fx.save();fx.globalAlpha=alpha;
+      fx.beginPath();fx.moveTo(p[0],p[1]);fx.lineTo(lx,ly);fx.lineWidth=1;fx.strokeStyle=l.tone==='amber'?'#e7b582bb':'#dbeab099';fx.stroke();
       fx.fillStyle='#10291fec';fx.strokeStyle=l.tone==='amber'?'#dba66b99':'#aac98480';fx.lineWidth=1;fx.beginPath();
       if(fx.roundRect)fx.roundRect(x,y,w,h,4);else fx.rect(x,y,w,h);fx.fill();fx.stroke();
       fx.fillStyle=l.tone==='amber'?'#ffcd98':'#e8f3cb';fx.textAlign='left';fx.textBaseline='middle';fx.fillText(text,x+11,y+h/2);
       fx.beginPath();fx.arc(p[0],p[1],2.3,0,Math.PI*2);fx.fill();
+      fx.restore();
     }
+    for(const k of [...labelSeen.keys()])if(!live.has(k))labelSeen.delete(k);
+    if(fading)requestRender();
     const cap=$('.life-scene-caption'),facts=$('.life-scene-facts');
     if(cap&&captionKey!==scene.caption){cap.textContent=scene.caption;captionKey=scene.caption;}
     const nextFacts=scene.facts.join('|');
     if(facts&&factsKey!==nextFacts){facts.replaceChildren(...scene.facts.map(s=>{const span=document.createElement('span');span.textContent=s;return span;}));factsKey=nextFacts;}
-    updatePins();
   }
   function updatePins(){
     let ids=scenario.layer==='power'?['switchgear','ups-b']:scenario.layer==='cooling'?['crah-02','hall-2']:scenario.layer==='evidence'?['switchgear','hall-2','crah-02']:scenario.layer==='people'?[]:[['switchgear','hall-1'],['hall-1'],['hall-1'],['hall-1','crah-02'],['hall-1'],['hall-1']][scenario.moment];
     ids=[...ids];if(scenario.selected&&!ids.includes(scenario.selected))ids.push(scenario.selected);
+    const at=[],placed=[];
     $$('[data-life-asset]').forEach(pin=>{
       const id=pin.dataset.lifeAsset,p=project(targets[id].point),shown=ids.includes(id)&&(id!=='expansion'||transitions.wing>.7);
       pin.hidden=!shown;pin.style.opacity=shown?'1':'0';pin.style.pointerEvents=shown?'auto':'none';
-      pin.style.left=clamp(p[0],15,state.width-110)+'px';pin.style.top=clamp(p[1],80,state.height-115)+'px';
       pin.setAttribute('aria-pressed',String(id===scenario.selected));
+      at.push({pin,shown,L:clamp(p[0],15,state.width-110),T:clamp(p[1],80,state.height-115)});
     });
+    // Dots mark equipment and never move, so every visible dot is an obstacle from the start.
+    const dots=new Map(at.filter(a=>a.shown).map(a=>[a.pin,{x:a.L-12,y:a.T-6,w:13,h:12}]));
+    // A pin whose label would cover one already placed moves its label: to the other side of its
+    // point, then just above or below it. A pin keeps its spot while it stays clear, so nothing flickers.
+    for(const a of at){
+      const {pin,L,T}=a;pin.style.left=L+'px';pin.style.top=T+'px';
+      if(!a.shown){pin.classList.remove('is-flipped','pin-up','pin-down');pin.style.removeProperty('--pin-dy');pin.dataset.slot='0';continue;}
+      let size=pinSizes.get(pin);if(!size){size={w:pin.offsetWidth,h:pin.offsetHeight};if(size.w)pinSizes.set(pin,size);}
+      const w=size.w,h=size.h,dy=h+5;
+      const slots=[[0,0],[1,0],[0,-dy],[0,dy],[1,-dy],[1,dy]];
+      const rect=([f,d])=>({x:f?L-1-w:L-10,y:T-h/2+d,w,h});
+      const others=[...placed,...[...dots].filter(([k])=>k!==pin).map(([,v])=>v)];
+      const ok=(slot,m)=>{const b=rect(slots[slot]);return b.x>=4&&b.x+b.w<=state.width-4&&!others.some(o=>b.x<o.x+o.w+m&&b.x+b.w+m>o.x&&b.y<o.y+o.h+m&&b.y+b.h+m>o.y);};
+      let slot=+pin.dataset.slot||0;
+      if(slot&&ok(0,12))slot=0;
+      else if(!ok(slot,3)){const free=slots.findIndex((_,i)=>ok(i,3));slot=free<0?0:free;}
+      pin.dataset.slot=String(slot);const [f,d]=slots[slot];
+      // Crossing to the other side of the dot can't glide (it would pass over the dot), so the label fades across.
+      if(pin.classList.contains('is-flipped')!==!!f&&!reduced())pin.lastElementChild?.animate?.([{opacity:0},{opacity:1}],{duration:240,easing:'cubic-bezier(.2,.7,.2,1)'});
+      pin.classList.toggle('is-flipped',!!f);pin.classList.toggle('pin-up',d<0);pin.classList.toggle('pin-down',d>0);
+      if(d){pin.style.setProperty('--pin-dy',d+'px');pin.style.setProperty('--pin-dy-abs',Math.abs(d)+'px');}else{pin.style.removeProperty('--pin-dy');pin.style.removeProperty('--pin-dy-abs');}
+      const r=rect(slots[slot]);placed.push(r);
+      // The hairline between a moved label and its dot is part of the pin too: nothing may sit across it.
+      const y0=d>0?T+6:r.y+r.h,y1=d>0?r.y:T-6;if(d&&y1>y0)placed.push({x:L-7,y:y0,w:3,h:y1-y0});
+    }
+    return [...placed,...dots.values()];
   }
   function syncViewport(){
     if(pendingViewport){Object.assign(state,pendingViewport);pendingViewport=null;}
@@ -960,7 +1015,29 @@ window.createEntanglLifecycleModel = function(root,onSelect) {
     dirty=true;
     if(!animationId)animationId=requestAnimationFrame(tick);
   }
+  let chromeBand=0,pinSizes=new WeakMap();
+  addEventListener('resize',()=>{pinSizes=new WeakMap();},{passive:true});
+  function measureChrome(){
+    const c=$('.life-view-controls');
+    if(scenario.presentation!=='hero'||!c){chromeBand=0;return;}
+    const r=root.getBoundingClientRect(),b=c.getBoundingClientRect();
+    chromeBand=b.height?Math.max(0,r.bottom-b.top+8):0;
+  }
+  function chromeReserve(){
+    const hero=root.closest('.life-hero');if(!hero||!chromeBand)return 0;
+    const tools=hero.dataset.lifeMobile==='true'?1:Math.min(1,parseFloat(hero.style.getPropertyValue('--life-tool-opacity'))||0);
+    return chromeBand*tools;
+  }
+  function easeCamera(dt){
+    let moving=false;
+    for(const k of ['yaw','elev','zoom']){
+      const d=view[k]-state[k];if(!d)continue;moving=true;
+      state[k]=reduced()||Math.abs(d)<.0005?view[k]:state[k]+d*(1-Math.exp(-dt*12));
+    }
+    return moving;
+  }
   function resize(){
+    measureChrome();
     const r=root.getBoundingClientRect();if(r.width<1||r.height<1)return;
     const dpr=Math.min(window.devicePixelRatio||1,1.5);
     if(!pendingViewport&&Math.abs(state.width-r.width)<.01&&Math.abs(state.height-r.height)<.01&&state.dpr===dpr)return;
@@ -971,10 +1048,11 @@ window.createEntanglLifecycleModel = function(root,onSelect) {
     if(!state.visible||state.contextLost||document.hidden){lastFrame=now;return;}
     const animate=moving(),dt=Math.min(.06,(now-lastFrame)/1000||.033);lastFrame=now;
     if(animate){state.time+=dt;advance(dt);}
-    if(dirty||pendingViewport||animate&&now-lastRender>(gl?33:160)){
+    const settling=easeCamera(Math.min(dt,.034));
+    if(dirty||pendingViewport||settling||animate&&now-lastRender>(gl?33:160)){
       dirty=false;render();lastRender=now;
     }
-    if(animate&&!animationId)animationId=requestAnimationFrame(tick);
+    if((animate||settling)&&!animationId)animationId=requestAnimationFrame(tick);
   }
   function restart(){
     if(animationId)cancelAnimationFrame(animationId);animationId=0;lastFrame=performance.now();
@@ -1007,7 +1085,7 @@ window.createEntanglLifecycleModel = function(root,onSelect) {
     if(!anchor||anchor.id!==e.pointerId)return;const dx=e.clientX-anchor.x,dy=e.clientY-anchor.y;
     if(Math.abs(dx)+Math.abs(dy)>6)anchor.moved=true;
     if(!state.drag&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.1){state.drag=true;canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging');}
-    if(state.drag){state.yaw=clamp(anchor.yaw-dx*.004,.1,1.34);state.elev=clamp(anchor.elev+dy*.002,.35,.96);requestRender();}
+    if(state.drag){state.yaw=view.yaw=clamp(anchor.yaw-dx*.004,.1,1.34);state.elev=view.elev=clamp(anchor.elev+dy*.002,.35,.96);requestRender();}
   });
   function endPointer(e){
     if(!anchor||anchor.id!==e.pointerId)return;const moved=anchor.moved;anchor=null;state.drag=false;canvas.classList.remove('dragging');
@@ -1017,16 +1095,16 @@ window.createEntanglLifecycleModel = function(root,onSelect) {
   canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',endPointer);
   canvas.addEventListener('lostpointercapture',()=>{anchor=null;state.drag=false;canvas.classList.remove('dragging');});
   function cameraAction(action){
-    if(action==='left')state.yaw=clamp(state.yaw+.12,.1,1.34);if(action==='right')state.yaw=clamp(state.yaw-.12,.1,1.34);
-    if(action==='in')state.zoom=clamp(state.zoom+.12,.72,1.9);if(action==='out')state.zoom=clamp(state.zoom-.12,.72,1.9);
-    if(action==='reset')Object.assign(state,initialCamera);
+    if(action==='left')view.yaw=clamp(view.yaw+.12,.1,1.34);if(action==='right')view.yaw=clamp(view.yaw-.12,.1,1.34);
+    if(action==='in')view.zoom=clamp(view.zoom+.12,.72,1.9);if(action==='out')view.zoom=clamp(view.zoom-.12,.72,1.9);
+    if(action==='reset')Object.assign(view,initialCamera);
     if(action==='pause'){state.paused=!state.paused;const b=$('[data-life-camera="pause"]');if(b){b.setAttribute('aria-pressed',String(state.paused));b.setAttribute('aria-label',state.paused?'Resume scene animation':'Pause scene animation');b.textContent=state.paused?'▷':'Ⅱ';}restart();}
     requestRender();
   }
   canvas.addEventListener('keydown',e=>{
     const map={ArrowLeft:'left',ArrowRight:'right','+':'in','=':'in','-':'out',Home:'reset',' ':'pause'};
     if(map[e.key]){e.preventDefault();cameraAction(map[e.key]);}
-    else if(['ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();state.elev=clamp(state.elev+(e.key==='ArrowUp'?.06:-.06),.35,.96);requestRender();}
+    else if(['ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();view.elev=clamp(view.elev+(e.key==='ArrowUp'?.06:-.06),.35,.96);requestRender();}
   });
   resize();
   return Object.freeze({

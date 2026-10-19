@@ -69,7 +69,11 @@
       const path=geometry.markers.map((n,i)=>`${i?'L':'M'}${n.x.toFixed(2)},${n.y.toFixed(2)}`).join(' ');
       track.setAttribute('viewBox',`0 0 ${width} ${height}`);base.setAttribute('d',path);
       const selected=getMoment();
-      const filled=geometry.markers.slice(0,selected+1).map((n,i)=>`${i?'L':'M'}${n.x.toFixed(2)},${n.y.toFixed(2)}`).join(' ');
+      // The filled rail follows the reader continuously between stages (and through a jump),
+      // so it arrives at the next number exactly as that stage takes over.
+      const along=raw<1?0:clamp((travel-morph)/step,0,5),reach=Math.floor(along),part=along-reach,mk=geometry.markers;
+      const points=mk.slice(0,reach+1);if(reach<5&&part>0)points.push({x:mk[reach].x+(mk[reach+1].x-mk[reach].x)*part,y:mk[reach].y+(mk[reach+1].y-mk[reach].y)*part});
+      const filled=points.map((n,i)=>`${i?'L':'M'}${n.x.toFixed(2)},${n.y.toFixed(2)}`).join(' ');
       active.setAttribute('d',filled);nav.setAttribute('aria-orientation',progress>.5?'vertical':'horizontal');
       buttons.forEach((button,i)=>{const n=geometry.nodes[i];if(composited){button.style.left='0px';button.style.top='0px';button.style.translate=n.x.toFixed(2)+'px '+n.y.toFixed(2)+'px';}else{button.style.left=n.x.toFixed(2)+'px';button.style.top=n.y.toFixed(2)+'px';}button.dataset.completed=String(i<selected);});
       if(seenStage!==selected){seenStage=selected;$('.life-hero-panel').scrollTop=0;}

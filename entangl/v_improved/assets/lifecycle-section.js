@@ -128,7 +128,7 @@
     const viewState = () => ({ ...state, presentation: hero ? 'hero' : 'section', focusAsset: state.selected || (state.moment === 1 ? (state.work === 'ups' ? 'ups-b' : 'crah-02') : state.moment === 5 ? recordItems[state.record].asset : moments[state.moment].asset) });
     function updateWorld() {
       const labels = [state.launch ? 'Acceptance recorded' : 'Acceptance review', state.workDone[state.work] ? 'Work completed' : 'Maintenance in progress', state.incident === 1 ? 'Cooling incident · Hall 02' : state.incident === 2 ? 'Recovery recorded' : 'Normal operating scenario', state.handover ? 'Management transferred' : 'Management transfer', state.expansion ? 'Expansion concept' : 'Customer demand', audienceData[state.audience][0] + ' perspective'];
-      $('#life-world-state').textContent = labels[state.moment];
+      { const ws = $('#life-world-state'); if (ws.textContent !== labels[state.moment]) { ws.textContent = labels[state.moment]; ws.animate?.([{ opacity: 0 }, { opacity: 1 }], { duration: 320 }); } }
       root.dataset.moment = moments[state.moment].id;
       root.dataset.incident = String(state.incident === 1 && state.moment === 2);
       model?.update(viewState());
@@ -138,20 +138,42 @@
       if (focusAction) $(`[data-life-action="${focusAction}"]`)?.focus({ preventScroll: true });
       updateWorld();
     }
+    // A stage change hands over instead of cutting: the outgoing content lifts away while the new
+    // content settles in from the direction of travel, heading first, then the list, then the card.
+    function handOver(container, update, dir) {
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('reduce-motion');
+      const parent = container?.parentElement;
+      if (still || !dir || !parent || !container.getClientRects().length || !container.animate) { update(); return; }
+      parent.querySelectorAll(':scope > .life-ghost').forEach(g => g.remove());
+      [...container.children].forEach(el => el.getAnimations().forEach(a => a.cancel()));
+      if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+      const c = container.getBoundingClientRect(), pr = parent.getBoundingClientRect();
+      const ghost = container.cloneNode(true);
+      ghost.removeAttribute('id'); ghost.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+      ghost.classList.add('life-ghost'); ghost.setAttribute('aria-hidden', 'true'); ghost.inert = true;
+      Object.assign(ghost.style, { position: 'absolute', margin: '0', pointerEvents: 'none', left: (c.left - pr.left - parent.clientLeft + parent.scrollLeft) + 'px', top: (c.top - pr.top - parent.clientTop + parent.scrollTop) + 'px', width: c.width + 'px' });
+      update();
+      parent.append(ghost);
+      ghost.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateY(${-12 * dir}px)` }], { duration: 160, easing: 'cubic-bezier(0,0,.2,1)', fill: 'forwards' }).finished.then(() => ghost.remove(), () => ghost.remove());
+      [...container.children].forEach((el, i) => el.animate([{ opacity: 0, transform: `translateY(${16 * dir}px)` }, { opacity: 1, transform: 'none' }], { duration: 420, delay: 130 + i * 55, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'backwards' }));
+    }
     function setMoment(index, focusTab = false) {
+      const previous = state.moment;
       state.moment = (Number(index) + moments.length) % moments.length;
-      const m = moments[state.moment];
+      const m = moments[state.moment], dir = state.moment === previous ? 0 : state.moment > previous ? 1 : -1;
       $$('[data-life-moment]').forEach((b, i) => { b.setAttribute('aria-selected', String(i === state.moment)); b.tabIndex = i === state.moment ? 0 : -1; });
       $('#life-panel').setAttribute('aria-labelledby', 'life-tab-' + m.id);
-      if (hero) $('#life-panel-index').innerHTML = panelIndexHTML(state.moment);
-      else $('#life-panel-index').textContent = `0${state.moment + 1} / ${m.era.toUpperCase()}`;
-      $('#life-moment-title').textContent = m.title;
-      $('#life-moment-copy').textContent = m.copy;
-      $('#life-counter').innerHTML = `0${state.moment + 1} <i>/ 06</i>`;
-      $('#life-topic-tags').innerHTML = m.tags.map(t => `<span>${t}</span>`).join('');
-      if (hero) { $('#life-stage-features').innerHTML = featureHTML(state); $('.life-mobile-stage-name').textContent = m.name; }
-      renderPanel();
-      if (hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('reduce-motion')) $('.life-hero-copy').animate?.([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}], {duration:240,easing:'cubic-bezier(.2,.7,.2,1)'});
+      $('#life-counter').innerHTML = `<b>0${state.moment + 1}</b> <i>/ 06</i>`;
+      if (hero) { const name = $('.life-mobile-stage-name'); if (name.textContent !== m.name) { name.textContent = m.name; if (dir) name.animate?.([{ opacity: 0 }, { opacity: 1 }], { duration: 320 }); } }
+      handOver(hero ? $('.life-hero-copy') : $('#life-panel'), () => {
+        if (hero) $('#life-panel-index').innerHTML = panelIndexHTML(state.moment);
+        else $('#life-panel-index').textContent = `0${state.moment + 1} / ${m.era.toUpperCase()}`;
+        $('#life-moment-title').textContent = m.title;
+        $('#life-moment-copy').textContent = m.copy;
+        $('#life-topic-tags').innerHTML = m.tags.map(t => `<span>${t}</span>`).join('');
+        if (hero) $('#life-stage-features').innerHTML = featureHTML(state);
+        renderPanel();
+      }, dir);
       if (focusTab) $(`#life-tab-${m.id}`).focus({ preventScroll: true });
       announce.textContent = `Moment ${state.moment + 1}: ${m.name}. ${m.copy}`;
     }
