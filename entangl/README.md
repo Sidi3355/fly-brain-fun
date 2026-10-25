@@ -6,7 +6,7 @@ A self-contained folder, ready to move into its own repository. The content and 
 | --- | --- |
 | `v_original/` | Byte-for-byte mirror of entangl.com as served on 14 October 2026: all 28 pages, every asset, the 18 MB outage report, `robots.txt`, `sitemap.xml`, `_headers` and the custom 404. |
 | `v_improved/` | The same site with the fixes from the audit applied. Same pages, words, layout, palette and interactions; the friction is removed. |
-| `v_new/` | A new website for Entangl, designed from scratch around one idea: the site is an issued drawing set. Same content, facts, scope and links; new structure, typography and interactions. Forms are disconnected. See `v_new/README.md`. |
+| `v_new/` | The redesign: every page, word, link and interaction of the original, with a new visual design layered on top (one typeface, calmer colour, quieter controls). Forms are disconnected. See `v_new/README.md`. |
 | `analysis/AUDIT.md` | What was measured, in which scenarios, every finding with its evidence, and the before/after numbers. |
 | `analysis/UI-REVIEW.md` | Round 2: overlaps and transitions measured frame by frame, what was rebuilt, and the results. |
 | `analysis/screenshots/` | Before/after pairs for the fixes you can see. |
@@ -28,7 +28,7 @@ Every path is root-absolute (`/assets/site.css`), so each version must be served
 Either folder deploys as-is to any static host that uses directory-index routing:
 - **Cloudflare (Pages or Workers static assets):** this is what entangl.com runs on, and it honours `_headers`.
 - **Netlify:** honours `_headers`.
-- **Vercel:** `v_improved` is live at https://entangl-site.vercel.app (project `entangl-site`, root directory `entangl/v_improved`). `v_new` is a separate project, `entangl-issued`, deployed from `entangl/v_new/site`. Vercel ignores `_headers`, so `v_improved/vercel.json` carries the same rules plus entangl.com's trailing-slash routing. Copy that file into `v_original` to deploy it the same way.
+- **Vercel:** `v_improved` is live at https://entangl-site.vercel.app (project `entangl-site`, root directory `entangl/v_improved`). `v_new` is a separate project, `entangl-new` (https://entangl-new.vercel.app), deployed from `entangl/v_new/site`. Vercel ignores `_headers`, so `v_improved/vercel.json` carries the same rules plus entangl.com's trailing-slash routing. Copy that file into `v_original` to deploy it the same way.
 - **GitHub Pages:** works, but ignores `_headers`. Its only rules are `noindex` on the report and thank-you pages, and a download filename for the PDF.
 
 ## How faithful the mirror is
