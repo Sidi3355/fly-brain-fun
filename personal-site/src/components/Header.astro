@@ -1,0 +1,301 @@
+---
+import { profile } from '../data/profile';
+
+const nav = [
+  { href: '/#research', label: 'Research' },
+  { href: '/#work', label: 'Work' },
+  { href: '/#pinout', label: 'Skills' },
+  { href: '/#history', label: 'History' },
+  { href: '/#contact', label: 'Contact' },
+];
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/">
+      <svg class="chip" viewBox="0 0 28 28" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="1.4" fill="none">
+          <rect x="6" y="5" width="16" height="18" rx="1" />
+          <path d="M2 9h4M2 14h4M2 19h4M22 9h4M22 14h4M22 19h4" />
+        </g>
+        <circle cx="9.5" cy="8.5" r="1.3" fill="var(--accent)" />
+      </svg>
+      <span class="brand-name">{profile.name}</span>
+      <span class="brand-part mono">{profile.partNumber}</span>
+    </a>
+
+    <nav class="nav" aria-label="Sections">
+      <ul>
+        {
+          nav.map((n) => (
+            <li>
+              <a href={n.href}>{n.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="tools">
+      <button class="cmdk" type="button" data-open-palette aria-keyshortcuts="Control+K Meta+K /">
+        <svg class="cmdk-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"></circle><path d="m10.5 10.5 3.5 3.5" stroke="currentColor" stroke-width="1.5"></path></svg>
+        <span class="cmdk-label">Search</span>
+        <kbd data-mod-key aria-hidden="true">Ctrl K</kbd>
+      </button>
+      <button class="theme" type="button" data-theme-toggle title="Switch theme">
+        <span class="visually-hidden">Theme:{' '}</span>
+        <span class="theme-track">
+          <span class="theme-opt" data-opt="paper">Paper</span>
+          <span class="visually-hidden">{' / '}</span>
+          <span class="theme-opt" data-opt="blueprint">Blueprint</span>
+        </span>
+        <span class="visually-hidden" data-theme-state></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--header-h);
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: blur(10px) saturate(1.2);
+    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+
+  .chip {
+    width: 26px;
+    height: 26px;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .brand:hover .chip {
+    transform: rotate(-90deg);
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-stretch: 88%;
+    font-size: 1.02rem;
+    letter-spacing: 0.01em;
+  }
+
+  .brand-part {
+    font-size: 0.68rem;
+    color: var(--ink-3);
+    padding: 0 0.45em;
+    border: 1px solid var(--rule);
+  }
+
+  .nav {
+    margin-left: auto;
+  }
+
+  .nav ul {
+    display: flex;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 10px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-decoration: none;
+    color: var(--ink-2);
+  }
+
+  .nav a:hover {
+    color: var(--accent-ink);
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cmdk {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 6px 0 10px;
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+
+  .cmdk:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .cmdk kbd {
+    white-space: nowrap;
+  }
+
+  .cmdk-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (hover: none) {
+    .cmdk kbd {
+      display: none;
+    }
+
+    .cmdk {
+      padding: 0 10px;
+    }
+  }
+
+  .theme {
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .theme-track {
+    display: flex;
+    height: 100%;
+  }
+
+  .theme-opt {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 9px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition:
+      background-color 0.25s,
+      color 0.25s;
+  }
+
+  :global(:root[data-active-theme='paper']) .theme-opt[data-opt='paper'],
+  :global(:root[data-active-theme='blueprint']) .theme-opt[data-opt='blueprint'] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  @media (max-width: 960px) {
+    .nav {
+      display: none;
+    }
+
+    .tools {
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .brand-part,
+    .cmdk kbd {
+      display: none;
+    }
+
+    .cmdk-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .cmdk {
+      width: 36px;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .bar {
+      gap: 10px;
+    }
+
+    .brand-name {
+      font-size: 0.95rem;
+    }
+
+    .theme-opt {
+      padding: 0 7px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .brand-name {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  const active = () =>
+    (root.dataset.theme as 'paper' | 'blueprint' | undefined) ?? (media.matches ? 'blueprint' : 'paper');
+
+  function sync() {
+    const t = active();
+    root.dataset.activeTheme = t;
+    document.querySelectorAll<HTMLElement>('[data-theme-state]').forEach((el) => {
+      el.textContent = `, ${t} is on`;
+    });
+    window.dispatchEvent(new CustomEvent('themechange', { detail: t }));
+  }
+
+  function toggleTheme() {
+    const next = active() === 'paper' ? 'blueprint' : 'paper';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    sync();
+  }
+
+  // Exposed for the command palette.
+  (window as unknown as { toggleTheme: () => void }).toggleTheme = toggleTheme;
+
+  document.querySelectorAll('[data-theme-toggle]').forEach((b) => b.addEventListener('click', toggleTheme));
+  media.addEventListener('change', sync);
+  sync();
+
+  // Show the right modifier key.
+  if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) {
+    document.querySelectorAll('[data-mod-key]').forEach((k) => (k.textContent = '⌘K'));
+  }
+</script>

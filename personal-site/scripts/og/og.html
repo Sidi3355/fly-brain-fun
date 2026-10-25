@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Archivo'; src: url('../../node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2') format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; }
+  @font-face { font-family: 'Plex Sans'; src: url('../../node_modules/@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2') format('woff2'); font-weight: 100 700; }
+  @font-face { font-family: 'Plex Mono'; src: url('../../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2') format('woff2'); font-weight: 400; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    position: relative; overflow: hidden; color: #15171c; font-family: 'Plex Sans';
+    background-color: #f3f0e8;
+    background-image:
+      linear-gradient(rgb(21 23 28 / .085) 1px, transparent 1px), linear-gradient(90deg, rgb(21 23 28 / .085) 1px, transparent 1px),
+      linear-gradient(rgb(21 23 28 / .045) 1px, transparent 1px), linear-gradient(90deg, rgb(21 23 28 / .045) 1px, transparent 1px);
+    background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  }
+  .frame { position: absolute; inset: 28px; border: 2px solid #15171c; }
+  .eyebrow { position: absolute; left: 72px; top: 64px; font-family: 'Plex Mono'; font-size: 20px; letter-spacing: .08em; text-transform: uppercase; color: #62666f; display: flex; align-items: center; gap: 14px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: #c93816; }
+  h1 { position: absolute; left: 66px; top: 112px; font-family: 'Archivo'; font-stretch: 72%; font-weight: 820; font-size: 168px; line-height: .84; text-transform: uppercase; letter-spacing: -.012em; }
+  h1 span { display: block; width: fit-content; }
+  h1 .o { color: transparent; -webkit-text-stroke: 2.5px #15171c; }
+  .dim { position: absolute; left: 72px; top: 418px; height: 22px; border-left: 2px solid #15171c; border-right: 2px solid #15171c; }
+  .dim::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: #15171c; }
+  .dim b { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #f3f0e8; padding: 0 12px; font: 400 18px 'Plex Mono'; }
+  .callouts { position: absolute; right: 72px; top: 150px; display: grid; gap: 26px; }
+  .c { display: flex; align-items: center; gap: 16px; }
+  .ball { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #15171c; display: grid; place-items: center; font: 400 20px 'Plex Mono'; background: #f3f0e8; }
+  .c strong { display: block; font-family: 'Archivo'; font-stretch: 85%; font-weight: 700; font-size: 30px; text-transform: uppercase; line-height: 1.05; }
+  .c span { font-size: 19px; color: #444852; }
+  .strip { position: absolute; left: 28px; right: 28px; bottom: 28px; height: 86px; border-top: 2px solid #15171c; display: grid; grid-template-columns: 1.4fr 1fr 1fr; }
+  .strip div { padding: 16px 44px; border-right: 1px solid rgb(21 23 28 / .3); }
+  .strip div:last-child { border-right: 0; }
+  .strip small { display: block; font: 400 14px 'Plex Mono'; letter-spacing: .08em; text-transform: uppercase; color: #62666f; }
+  .strip p { font-size: 22px; margin-top: 4px; }
+  .acc { color: #b5300f; }
+</style>
+</head>
+<body>
+  <div class="frame"></div>
+  <p class="eyebrow"><span class="dot"></span>Datasheet · SO-26 · Rev 2026.10</p>
+  <h1><span>Siddarth</span><span class="o">Oruganti</span></h1>
+  <div class="dim" id="dim"><b id="dimv"></b></div>
+  <div class="callouts">
+    <div class="c"><span class="ball">1</span><div><strong>Researcher</strong><span>Interpretability & AI evaluation</span></div></div>
+    <div class="c"><span class="ball">2</span><div><strong>Engineer</strong><span>EIE, Imperial College London</span></div></div>
+    <div class="c"><span class="ball">3</span><div><strong>Designer</strong><span>A* Product Design</span></div></div>
+  </div>
+  <div class="strip">
+    <div><small>Research</small><p>Per the Spec · <span class="acc">Skill Without Physics</span></p></div>
+    <div><small>Quant</small><p>Kalshi market maker</p></div>
+    <div><small>Build</small><p>Neuronaut · Saurus</p></div>
+  </div>
+  <script>
+    document.fonts.ready.then(() => {
+      const w = Math.round(document.querySelector('h1').getBoundingClientRect().width);
+      const d = document.getElementById('dim'); d.style.width = (w - 6) + 'px';
+      document.getElementById('dimv').textContent = w.toLocaleString('en-GB') + ' px';
+      document.body.dataset.ready = '1';
+    });
+  </script>
+</body>
+</html>

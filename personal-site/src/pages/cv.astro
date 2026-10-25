@@ -1,0 +1,344 @@
+---
+import Base from '../layouts/Base.astro';
+import { profile, revisions, awards, pins, learning, type PinGroup } from '../data/profile';
+import { projects, bySlug } from '../data/projects';
+
+// A one-page CV generated from the same data as the site. No phone number or home address:
+// this page is public. Print it (or "Save as PDF") for an A4 copy.
+const experience = revisions.filter((r) => r.kind === 'work' || (r.kind === 'research' && r.bullets));
+const researchPapers = projects.filter((p) => p.tier === 'research');
+const selected = ['kalshi-market-making', 'saurus', 'neuronaut', 'formtwin', 'pitchfinder', 'athlexo', 'wunder-connectome']
+  .map((s) => bySlug(s))
+  .filter((p) => p !== undefined);
+const groups: [PinGroup, string][] = [
+  ['lang', 'Languages'],
+  ['ml', 'ML & AI'],
+  ['data', 'Data & method'],
+  ['build', 'Software'],
+  ['hw', 'Hardware'],
+];
+const host = new URL(profile.site).host;
+---
+
+<Base title="CV" description={`CV of ${profile.name}: education, experience, research and projects.`} sheet="CV">
+  <div class="wrap cv-wrap">
+    <div class="toolbar no-print">
+      <a class="mono back" href="/">← Back to the datasheet</a>
+      <button class="btn" type="button" data-print>Print / save as PDF</button>
+    </div>
+
+    <article class="cv">
+      <header class="cv-head">
+        <h1>{profile.name}</h1>
+        <p class="role">Electronic & Information Engineering, Imperial College London</p>
+        <p class="contact mono">
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          <span aria-hidden="true">·</span>
+          <a href={profile.links.linkedin}>linkedin.com/in/siddarth-oruganti</a>
+          <span aria-hidden="true">·</span>
+          <a href={profile.links.github}>github.com/Sidi3355</a>
+          <span aria-hidden="true">·</span>
+          <a href={profile.site}>{host}</a>
+        </p>
+      </header>
+
+      <section>
+        <h2>Education</h2>
+        <div class="item">
+          <div class="row">
+            <strong>Imperial College London</strong>
+            <span class="date mono">Sep 2026 – Jun 2029</span>
+          </div>
+          <p>BEng Electronic & Information Engineering</p>
+        </div>
+        <div class="item">
+          <div class="row">
+            <strong>Queen Elizabeth’s School</strong>
+            <span class="date mono">Sep 2019 – Jun 2026</span>
+          </div>
+          <p>A levels: Mathematics A*, Further Mathematics A*, Physics A*, Product Design A*, EPQ A*. GCSEs: ten grade 9s plus an A*.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Experience</h2>
+        {
+          experience.map((r) => (
+            <div class="item">
+              <div class="row">
+                <strong>
+                  {r.org ? `${r.org}: ` : ''}
+                  {r.title}
+                </strong>
+                <span class="date mono">{r.date}</span>
+              </div>
+              {r.bullets ? (
+                <ul>
+                  {r.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{r.body}</p>
+              )}
+            </div>
+          ))
+        }
+      </section>
+
+      <section>
+        <h2>Research</h2>
+        {
+          researchPapers.map((p) => (
+            <div class="item">
+              <div class="row">
+                <strong>
+                  {p.title}: <span class="normal">{p.kicker}</span>
+                </strong>
+                <span class="date mono">{p.date}</span>
+              </div>
+              <p>{p.summary}</p>
+            </div>
+          ))
+        }
+      </section>
+
+      <section>
+        <h2>Selected projects</h2>
+        {
+          selected.map((p) => (
+            <div class="item">
+              <div class="row">
+                <strong>
+                  {p.title}: <span class="normal">{p.kicker}</span>
+                </strong>
+                <span class="date mono">{p.date}</span>
+              </div>
+              <p>
+                {p.summary} <span class="metrics">{p.metrics.map((m) => `${m.value} ${m.label}`).join(' · ')}.</span>
+              </p>
+            </div>
+          ))
+        }
+      </section>
+
+      <section>
+        <h2>Awards</h2>
+        <ul class="plain">
+          {
+            awards.map((a) => (
+              <li>
+                <strong>{a.name}</strong> ({a.detail}), {a.year}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section>
+        <h2>Skills</h2>
+        <ul class="plain">
+          {
+            groups.map(([g, label]) => (
+              <li>
+                <strong>{label}:</strong>{' '}
+                {pins
+                  .filter((p) => p.group === g)
+                  .map((p) => p.name)
+                  .join(', ')}
+              </li>
+            ))
+          }
+          <li>
+            <strong>Self-study:</strong>
+            {learning.map((l) => l.name).join(', ')}
+          </li>
+        </ul>
+      </section>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .cv-wrap {
+    max-width: 920px;
+    padding-top: 28px;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .back {
+    font-size: 0.8rem;
+  }
+
+  .cv {
+    padding: clamp(24px, 5vw, 56px);
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 6px 6px 0 var(--ink);
+    font-size: 0.95rem;
+  }
+
+  .cv-head {
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h1 {
+    font-stretch: 75%;
+    font-weight: 820;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+
+  .role {
+    margin: 6px 0 4px;
+    font-size: 1.02rem;
+  }
+
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    margin: 0;
+    font-size: 0.78rem;
+  }
+
+  section {
+    margin-top: 20px;
+  }
+
+  h2 {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--rule-strong);
+    font-stretch: 85%;
+    font-size: 1.08rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .item {
+    margin-bottom: 10px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .normal {
+    font-weight: 400;
+  }
+
+  .date {
+    flex: none;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .item p {
+    margin: 2px 0 0;
+    line-height: 1.5;
+  }
+
+  .item ul,
+  .plain {
+    margin: 4px 0 0;
+    padding-left: 18px;
+  }
+
+  .item li,
+  .plain li {
+    margin: 2px 0;
+    line-height: 1.5;
+  }
+
+  .metrics {
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  @media print {
+    @page {
+      size: A4;
+      margin: 14mm 14mm 12mm;
+    }
+
+    :global(.site-header),
+    :global(.title-block-wrap),
+    :global(.skip-link),
+    :global(dialog),
+    .no-print {
+      display: none !important;
+    }
+
+    :global(body) {
+      background: #fff !important;
+      color: #000;
+      font-size: 9.6pt;
+    }
+
+    .cv-wrap {
+      max-width: none;
+      padding: 0;
+    }
+
+    .cv {
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      background: #fff;
+      font-size: 9.6pt;
+    }
+
+    .cv a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    h1 {
+      font-size: 26pt;
+    }
+
+    h2 {
+      color: #b5300f;
+      font-size: 10.5pt;
+      break-after: avoid;
+    }
+
+    section {
+      margin-top: 10pt;
+    }
+
+    .item {
+      break-inside: avoid;
+      margin-bottom: 6pt;
+    }
+
+    .date,
+    .metrics {
+      color: #444;
+    }
+  }
+</style>
+
+<script>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>

@@ -1,0 +1,320 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { about, profile, ratings } from '../../data/profile';
+import { bySlug } from '../../data/projects';
+
+const features = [
+  'Two research papers on AI evaluation and interpretability, both pre-registered',
+  'Five A* A levels: Maths, Further Maths, Physics, Product Design, EPQ',
+  'G-Research quant work experience (under 1.8% acceptance)',
+  'Y Combinator AI Startup School, San Francisco (under 5% of 30,000)',
+  'Ships to production: three live web apps and a native Windows tool',
+  'Builds in Python, TypeScript, C#, C++ and Lean 4; from Raspberry Pi to WebGL',
+];
+---
+
+<section class="sec" id="about" aria-labelledby="about-title">
+  <div class="wrap">
+    <SectionHead n="1" title="General description" plain="About" id="about" />
+
+    <div class="grid">
+      <div class="text" data-reveal>
+        <div class="summary">
+          <p class="label mono">1.1 Device summary</p>
+          <p class="blurb">{about.datasheet}</p>
+        </div>
+        <p class="label mono plain-label">1.2 In plain words</p>
+        {about.plain.map((p) => <p class="plain">{p}</p>)}
+      </div>
+
+      <aside class="side" data-reveal>
+        <figure class="portrait">
+          {
+            profile.headshot ? (
+              <img src={profile.headshot} alt={`Portrait of ${profile.name}`} width="480" height="600" loading="lazy" decoding="async" />
+            ) : (
+              <div class="placeholder" role="img" aria-label="Portrait placeholder">
+                <span class="ph-x" aria-hidden="true" />
+                <span class="ph-text mono">Photo TBD</span>
+              </div>
+            )
+          }
+          <figcaption class="mono">Fig. 1: the device, actual size.</figcaption>
+        </figure>
+
+        <div class="features">
+          <p class="label mono">1.3 Features</p>
+          <ul>
+            {features.map((f) => <li>{f}</li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <div class="ratings" data-reveal>
+      <div class="ratings-head">
+        <p class="label mono">1.4 Absolute maximum ratings</p>
+        <p class="fine">Stresses beyond those listed are what the next project is for.</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Symbol</th>
+              <th scope="col">Parameter</th>
+              <th scope="col" class="num">Value</th>
+              <th scope="col">Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              ratings.map((r) => {
+                const p = bySlug(r.ref);
+                return (
+                  <tr>
+                    <td class="mono sym">{r.symbol}</td>
+                    <td>{r.parameter}</td>
+                    <td class="num val">
+                      {r.value}
+                      {r.unit && <span class="unit">{r.unit}</span>}
+                    </td>
+                    <td class="mono src">{p && <a href={`/work/${p.slug}`}>{p.part} {p.title}</a>}</td>
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding: clamp(72px, 10vw, 128px) 0 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 72px);
+    align-items: start;
+  }
+
+  .label {
+    margin: 0 0 10px;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .summary {
+    position: relative;
+    padding: 20px 22px 6px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper-2);
+    margin-bottom: 32px;
+  }
+
+  .blurb {
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+    line-height: 1.55;
+  }
+
+  .plain {
+    font-size: 1.06rem;
+    line-height: 1.7;
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+
+  .side {
+    display: grid;
+    gap: 28px;
+  }
+
+  .portrait {
+    margin: 0;
+  }
+
+  .portrait img,
+  .placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 420px;
+    object-fit: cover;
+    border: 1.5px solid var(--ink);
+  }
+
+  .placeholder {
+    position: relative;
+    display: grid;
+    place-items: center;
+    background: repeating-linear-gradient(45deg, var(--hatch) 0 1px, transparent 1px 9px), var(--paper);
+  }
+
+  .ph-x {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top right, transparent calc(50% - 0.5px), var(--rule-strong) 50%, transparent calc(50% + 0.5px)),
+      linear-gradient(to bottom right, transparent calc(50% - 0.5px), var(--rule-strong) 50%, transparent calc(50% + 0.5px));
+  }
+
+  .ph-text {
+    position: relative;
+    padding: 4px 10px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .portrait figcaption {
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: var(--ink-3);
+  }
+
+  .features ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .features li {
+    position: relative;
+    padding: 9px 0 9px 22px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.93rem;
+    line-height: 1.45;
+  }
+
+  .features li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 15px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid var(--accent);
+    border-top: 4.5px solid transparent;
+    border-bottom: 4.5px solid transparent;
+  }
+
+  .ratings {
+    margin-top: clamp(40px, 6vw, 72px);
+  }
+
+  .ratings-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px 20px;
+  }
+
+  .fine {
+    margin: 0 0 10px;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--ink-3);
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  th,
+  td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.92rem;
+    white-space: nowrap;
+  }
+
+  th {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover {
+    background: var(--accent-wash);
+  }
+
+  .num {
+    text-align: right;
+  }
+
+  .sym {
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .val {
+    font-family: var(--font-display);
+    font-stretch: 85%;
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
+
+  .unit {
+    margin-left: 3px;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .src {
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .side {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .side {
+      grid-template-columns: 1fr;
+    }
+
+    .portrait img,
+    .placeholder {
+      max-height: 300px;
+    }
+
+    .sym {
+      display: none;
+    }
+
+    th:first-child {
+      display: none;
+    }
+  }
+</style>

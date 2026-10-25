@@ -1,0 +1,234 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { revisions, type LogKind } from '../../data/profile';
+
+const kinds: Record<LogKind, string> = {
+  work: 'Work',
+  research: 'Research',
+  edu: 'Education',
+  award: 'Award',
+  build: 'Build',
+};
+---
+
+<section class="sec" id="history" aria-labelledby="history-title">
+  <div class="wrap">
+    <SectionHead n="5" title="Revision history" plain="Experience & timeline" id="history">
+      <div class="filters" role="group" aria-label="Filter history" data-hfilters>
+        <button type="button" aria-pressed="true" data-k="all">All</button>
+        {
+          (Object.keys(kinds) as LogKind[]).map((k) => (
+            <button type="button" aria-pressed="false" data-k={k}>
+              {kinds[k]}
+            </button>
+          ))
+        }
+      </div>
+    </SectionHead>
+
+    <div class="table" role="table" aria-label="Revision history" data-reveal>
+      <div class="thead" role="rowgroup">
+        <div class="tr" role="row">
+          <span role="columnheader">Rev</span>
+          <span role="columnheader">Date</span>
+          <span role="columnheader">Type</span>
+          <span role="columnheader">Description of change</span>
+        </div>
+      </div>
+      <div class="tbody" role="rowgroup" data-hrows>
+        {
+          revisions.map((r) => (
+            <div class="tr" role="row" data-k={r.kind}>
+              <span class="rev mono" role="cell">
+                {r.rev}
+              </span>
+              <span class="date mono" role="cell">
+                {r.date}
+              </span>
+              <span role="cell">
+                <span class:list={['tag', { 'tag--accent': r.kind === 'work' || r.kind === 'research' }]}>{kinds[r.kind]}</span>
+              </span>
+              <div class="desc" role="cell">
+                <h3>
+                  {r.title}
+                  {r.org && <span class="org"> · {r.org}</span>}
+                </h3>
+                <p>{r.body}</p>
+                {r.bullets && (
+                  <ul>
+                    {r.bullets.map((b) => (
+                      <li>{b}</li>
+                    ))}
+                  </ul>
+                )}
+                {r.ref && (
+                  <a class="ref mono" href={`/work/${r.ref}`}>
+                    Datasheet <span aria-hidden="true">→</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding: clamp(80px, 11vw, 140px) 0 0;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .filters button {
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+
+  .filters button:hover {
+    border-color: var(--ink);
+  }
+
+  .filters button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .table {
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .tr {
+    display: grid;
+    grid-template-columns: 84px 150px 108px minmax(0, 1fr);
+    gap: 16px;
+    padding: 14px 18px;
+  }
+
+  .thead .tr {
+    padding-block: 10px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .tbody .tr {
+    border-bottom: 1px solid var(--rule);
+    transition: background-color 0.2s;
+  }
+
+  .tbody .tr:last-child {
+    border-bottom: 0;
+  }
+
+  .tbody .tr:hover {
+    background: var(--accent-wash);
+  }
+
+  .tbody .tr[hidden] {
+    display: none;
+  }
+
+  .rev {
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .date {
+    font-size: 0.78rem;
+    color: var(--ink-2);
+  }
+
+  .desc h3 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.04rem;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  .org {
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+
+  .desc p {
+    margin: 4px 0 0;
+    font-size: 0.94rem;
+    color: var(--ink-2);
+    max-width: 72ch;
+  }
+
+  .desc ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    max-width: 72ch;
+  }
+
+  .desc li {
+    margin: 3px 0;
+  }
+
+  .desc li::marker {
+    color: var(--accent);
+  }
+
+  .ref {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 0;
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 760px) {
+    .thead {
+      display: none;
+    }
+
+    .tr {
+      grid-template-columns: auto auto 1fr;
+      gap: 6px 12px;
+      padding: 16px;
+    }
+
+    .desc {
+      grid-column: 1 / -1;
+    }
+
+    .tr > [role='cell']:nth-child(3) {
+      justify-self: end;
+    }
+  }
+</style>
+
+<script>
+  const wrap = document.querySelector<HTMLElement>('[data-hfilters]');
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-hrows] > [data-k]')];
+  wrap?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-k]');
+    if (!btn) return;
+    const k = btn.dataset.k;
+    wrap.querySelectorAll('[data-k]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    rows.forEach((r) => (r.hidden = !(k === 'all' || r.dataset.k === k)));
+  });
+</script>

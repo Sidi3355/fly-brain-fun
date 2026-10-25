@@ -1,0 +1,87 @@
+---
+interface Props {
+  n: string;
+  title: string;
+  plain: string;
+  id: string;
+}
+
+const { n, title, plain, id } = Astro.props;
+---
+
+<header class="sec-head" data-reveal>
+  <span class="num mono" aria-hidden="true">{n}</span>
+  <h2 id={`${id}-title`}>
+    <span class="t">{title}</span>
+    <span class="p">{plain}</span>
+  </h2>
+  <span class="rule" aria-hidden="true"></span>
+  <slot />
+</header>
+
+<style>
+  .sec-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: end;
+    column-gap: 16px;
+    margin-bottom: clamp(28px, 4vw, 48px);
+  }
+
+  .num {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid var(--ink);
+    font-size: 1.05rem;
+    font-weight: 500;
+    background: var(--paper);
+  }
+
+  h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+  }
+
+  .t {
+    font-stretch: 75%;
+    font-weight: 800;
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    text-transform: uppercase;
+    line-height: 0.9;
+  }
+
+  .p {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  .rule {
+    grid-column: 1 / -1;
+    height: 1.5px;
+    margin-top: 14px;
+    background: var(--ink);
+    position: relative;
+  }
+
+  .rule::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 1.5px;
+    height: 10px;
+    background: var(--ink);
+  }
+
+  .sec-head > :global(:not(.num, h2, .rule)) {
+    grid-column: 1 / -1;
+  }
+</style>

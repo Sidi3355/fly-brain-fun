@@ -1,0 +1,241 @@
+---
+import SectionHead from '../SectionHead.astro';
+import Figure from '../Figure.astro';
+import { research } from '../../data/projects';
+---
+
+<section class="sec" id="research" aria-labelledby="research-title">
+  <div class="wrap">
+    <SectionHead n="2" title="Characterisation" plain="Research" id="research">
+      <p class="intro">
+        Measuring what a model actually does, rather than what its score suggests. Every study is pre-registered or
+        controlled, and publishes its failures alongside its findings.
+      </p>
+    </SectionHead>
+
+    <ol class="papers">
+      {
+        research.map((p, i) => (
+          <li class="paper" data-reveal>
+            <a class="fig-frame" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
+              <Figure name={p.figure} label={p.figureCaption} uid={`res-${p.slug}`} />
+              <span class="fig-no mono">Fig. 2.{i + 1}</span>
+            </a>
+            <div class="text">
+              <p class="meta mono">
+                <span class="part">{p.part}</span>
+                <span>{p.date}</span>
+                {p.context && <span class="ctx">{p.context}</span>}
+              </p>
+              <h3>
+                <a href={`/work/${p.slug}`}>{p.title}</a>
+              </h3>
+              <p class="kicker">{p.kicker}</p>
+              <p class="summary">{p.summary}</p>
+              <dl class="metrics">
+                {p.metrics.map((m) => (
+                  <div>
+                    <dt>{m.label}</dt>
+                    <dd>{m.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div class="links mono">
+                <a class="btn btn--ghost small" href={`/work/${p.slug}`}>
+                  Full datasheet <span aria-hidden="true">→</span>
+                </a>
+                {p.links.map((l) => (
+                  <a href={l.href} class="lnk">
+                    {l.label}
+                    <span class="ext" aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding: clamp(80px, 11vw, 140px) 0 0;
+  }
+
+  .intro {
+    max-width: 62ch;
+    margin: 18px 0 0;
+    font-size: 1.02rem;
+    color: var(--ink-2);
+  }
+
+  .papers {
+    display: grid;
+    gap: clamp(28px, 4vw, 44px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .paper {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .fig-frame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: clamp(18px, 3vw, 32px);
+    border-right: 1px solid var(--rule-strong);
+    background-image:
+      linear-gradient(var(--grid-minor) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  .fig-frame :global(.fig) {
+    width: 100%;
+  }
+
+  .fig-no {
+    position: absolute;
+    left: 10px;
+    bottom: 8px;
+    font-size: 0.66rem;
+    color: var(--ink-3);
+  }
+
+  .text {
+    padding: clamp(20px, 3vw, 36px);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin: 0 0 10px;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .part {
+    padding: 0 6px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .ctx {
+    color: var(--accent-ink);
+  }
+
+  h3 {
+    font-stretch: 80%;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+
+  h3 a {
+    text-decoration: none;
+  }
+
+  .kicker {
+    margin: 8px 0 14px;
+    font-size: 1.08rem;
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .summary {
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 64ch;
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 18px 0 20px;
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .metrics div {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 12px 12px 0;
+  }
+
+  .metrics div + div {
+    padding-left: 12px;
+    border-left: 1px solid var(--rule);
+  }
+
+  .metrics dd {
+    order: -1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-stretch: 78%;
+    font-weight: 800;
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    line-height: 1.05;
+    color: var(--accent-ink);
+  }
+
+  .metrics dt {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+    font-size: 0.8rem;
+  }
+
+  .btn.small {
+    min-height: 38px;
+    font-size: 0.78rem;
+  }
+
+  .lnk {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+  }
+
+  @media (max-width: 900px) {
+    .paper {
+      grid-template-columns: 1fr;
+    }
+
+    .fig-frame {
+      border-right: 0;
+      border-bottom: 1px solid var(--rule-strong);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .metrics {
+      grid-template-columns: 1fr;
+    }
+
+    .metrics div + div {
+      padding-left: 0;
+      border-left: 0;
+      border-top: 1px solid var(--rule);
+    }
+  }
+</style>

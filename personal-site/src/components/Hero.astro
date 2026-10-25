@@ -1,0 +1,456 @@
+---
+import { profile } from '../data/profile';
+
+const callouts = [
+  // Each balloon's leader lands on a feature of the drawing: the solid line, the outline, the dimension.
+  { n: 1, role: 'Researcher', detail: 'Interpretability & AI evaluation', target: 'line0:1,0.4', href: '#research' },
+  { n: 2, role: 'Engineer', detail: 'Electronic & Information Eng., Imperial', target: 'line1:1,0.55', href: '#work' },
+  { n: 3, role: 'Designer', detail: 'A* Product Design, Valediction Award', target: 'dim:1,0.5', href: '#education' },
+];
+---
+
+<section class="hero" id="top" data-hero aria-labelledby="hero-name">
+  <canvas class="tank" aria-hidden="true" data-tank></canvas>
+  <svg class="leaders" aria-hidden="true" data-leaders></svg>
+
+  <div class="wrap inner">
+    <p class="eyebrow top">
+      <span class="dot" aria-hidden="true"></span>
+      Datasheet · {profile.partNumber} · Rev {profile.revision}<span class="loc"> · {profile.location}</span>
+    </p>
+
+    <div class="head">
+      <div class="name-block">
+        <h1 class="name" id="hero-name" data-name>
+          <span class="line">Siddarth</span>
+          <span class="line">Oruganti</span>
+        </h1>
+        <div class="dim" aria-hidden="true" data-dim-line>
+          <svg class="arr l" viewBox="0 0 10 8"><path d="M0 4 10 0v8z"></path></svg>
+          <svg class="arr r" viewBox="0 0 10 8"><path d="M10 4 0 0v8z"></path></svg>
+          <span class="dim-label mono" data-dim>&nbsp;</span>
+        </div>
+      </div>
+
+      <ol class="callouts" aria-label="In three words">
+        {
+          callouts.map((c) => (
+            <li data-callout data-target={c.target}>
+              <a href={c.href}>
+                <span class="balloon mono" data-balloon>
+                  {c.n}
+                </span>
+                <span class="c-text">
+                  <span class="c-role">{c.role}</span>
+                  <span class="c-detail">{c.detail}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <p class="lede">{profile.lede}</p>
+
+    <div class="cta">
+      <a class="btn btn--primary" href="#work">See the work <span aria-hidden="true">↓</span></a>
+      <a class="btn" href="/cv">Read the CV</a>
+      <a class="btn btn--ghost" href={profile.links.github} rel="me">GitHub<span class="ext" aria-hidden="true"></span></a>
+      <a class="btn btn--ghost" href={profile.links.linkedin} rel="me">LinkedIn<span class="ext" aria-hidden="true"></span></a>
+    </div>
+
+    <dl class="status">
+      {
+        profile.status.map((s) => (
+          <div>
+            <dt>{s.key}</dt>
+            <dd>{s.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <p class="fig-cap mono" aria-hidden="true">
+      Fig. 0: ripple tank. <span class="hint hint-mouse">Move to disturb, click to drop a wave.</span><span
+        class="hint hint-touch">Tap to drop a wave.</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    touch-action: pan-y;
+  }
+
+  .tank,
+  .leaders {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+
+  .leaders {
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .inner {
+    position: relative;
+    padding-top: clamp(40px, 7vh, 88px);
+    padding-bottom: 28px;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 clamp(18px, 3vh, 32px);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 var(--accent);
+    animation: pulse 2.4s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 9px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
+    align-items: center;
+    gap: clamp(24px, 6vw, 96px);
+  }
+
+  .name-block {
+    justify-self: start;
+    min-width: 0;
+  }
+
+  .name {
+    font-stretch: 72%;
+    font-weight: 820;
+    font-size: clamp(3.6rem, 13.5vw, 11rem);
+    line-height: 0.84;
+    letter-spacing: -0.012em;
+    text-transform: uppercase;
+  }
+
+  .line {
+    display: block;
+    width: fit-content;
+  }
+
+  .line + .line {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
+
+  .dim {
+    position: relative;
+    height: 20px;
+    margin-top: 14px;
+    border-left: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+  }
+
+  .dim::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  .arr {
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 8px;
+    transform: translateY(-50%);
+    fill: var(--ink);
+  }
+
+  .arr.l {
+    left: 0;
+  }
+
+  .arr.r {
+    right: 0;
+  }
+
+  .dim-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 10px;
+    background: var(--paper);
+    font-size: 0.72rem;
+    color: var(--ink-2);
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .callouts {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .callouts a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    padding: 4px 0;
+  }
+
+  .balloon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper);
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .callouts a:hover .balloon {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .c-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+
+  .c-role {
+    font-family: var(--font-display);
+    font-stretch: 85%;
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .c-detail {
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+
+  .lede {
+    max-width: 46ch;
+    margin: clamp(22px, 3.5vh, 40px) 0 0;
+    font-size: clamp(1.08rem, 1.5vw, 1.32rem);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 14px;
+    margin-top: 26px;
+  }
+
+  .status {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: clamp(36px, 6vh, 64px) 0 0;
+    border: 1px solid var(--rule-strong);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+  }
+
+  .status > div {
+    padding: 10px 12px;
+    border-right: 1px solid var(--rule);
+    min-width: 0;
+  }
+
+  .status > div:last-child {
+    border-right: 0;
+  }
+
+  .status dt {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .status dd {
+    margin: 2px 0 0;
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+
+  .fig-cap {
+    margin: 14px 0 0;
+    font-size: 0.68rem;
+    color: var(--ink-3);
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .head {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .callouts {
+      grid-template-columns: 1fr;
+    }
+
+    .status {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .status > div:nth-child(2) {
+      border-right: 0;
+    }
+
+    .status > div:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--rule);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .name {
+      font-size: clamp(3.4rem, 19.5vw, 6rem);
+    }
+
+    .loc {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .line + .line {
+      -webkit-text-stroke-width: 1.2px;
+    }
+
+    .cta .btn--ghost {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .fig-cap {
+      text-align: left;
+    }
+  }
+
+  .hint-touch {
+    display: none;
+  }
+
+  @media (hover: none) {
+    .hint-mouse {
+      display: none;
+    }
+
+    .hint-touch {
+      display: inline;
+    }
+  }
+</style>
+
+<script>
+  import { initRipple } from '../scripts/ripple';
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  const tank = document.querySelector<HTMLCanvasElement>('[data-tank]');
+  if (hero && tank) initRipple(hero, tank);
+
+  // Live dimension of the name, in CSS pixels.
+  const name = document.querySelector<HTMLElement>('[data-name]');
+  const dim = document.querySelector<HTMLElement>('[data-dim]');
+  const leaders = document.querySelector<SVGSVGElement>('[data-leaders]');
+  const fmt = new Intl.NumberFormat('en-GB');
+
+  function measure() {
+    if (!name || !dim || !hero) return;
+    const w = Math.round(name.getBoundingClientRect().width);
+    dim.textContent = `${fmt.format(w)} px`;
+    drawLeaders();
+  }
+
+  // Leader lines from each balloon to a point on the name, drafted with one elbow.
+  function drawLeaders() {
+    if (!leaders || !hero || !name) return;
+    leaders.replaceChildren();
+    if (window.innerWidth <= 900) return;
+    const hb = hero.getBoundingClientRect();
+    const nb = name.getBoundingClientRect();
+    const ns = 'http://www.w3.org/2000/svg';
+    document.querySelectorAll<HTMLElement>('[data-callout]').forEach((li) => {
+      const ball = li.querySelector<HTMLElement>('[data-balloon]');
+      if (!ball) return;
+      const bb = ball.getBoundingClientRect();
+      const [key, frac] = (li.dataset.target || 'line0:1,0.5').split(':');
+      const [tx, ty] = frac.split(',').map(Number);
+      const el =
+        key === 'dim'
+          ? document.querySelector<HTMLElement>('[data-dim-line]')
+          : name.querySelectorAll<HTMLElement>('.line')[Number(key.replace('line', ''))];
+      if (!el) return;
+      const tb = el.getBoundingClientRect();
+      const x1 = bb.left - hb.left;
+      const y1 = bb.top + bb.height / 2 - hb.top;
+      const x2 = tb.left - hb.left + tb.width * tx;
+      const y2 = tb.top - hb.top + tb.height * ty;
+      const elbow = nb.right - hb.left + 48;
+      const path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', `M${x1} ${y1}H${elbow}L${x2} ${y2}`);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', 'currentColor');
+      path.setAttribute('stroke-width', '1');
+      const dot = document.createElementNS(ns, 'circle');
+      dot.setAttribute('cx', String(x2));
+      dot.setAttribute('cy', String(y2));
+      dot.setAttribute('r', '3.2');
+      dot.setAttribute('fill', 'var(--accent)');
+      leaders.append(path, dot);
+    });
+  }
+
+  if (name) new ResizeObserver(measure).observe(name);
+  window.addEventListener('resize', drawLeaders);
+  document.fonts?.ready.then(measure);
+</script>

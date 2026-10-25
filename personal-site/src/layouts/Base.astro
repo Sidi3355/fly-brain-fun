@@ -1,0 +1,137 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource-variable/ibm-plex-sans/wght.css';
+import '@fontsource-variable/ibm-plex-sans/wght-italic.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '../styles/global.css';
+import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import Header from '../components/Header.astro';
+import TitleBlock from '../components/TitleBlock.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import { profile } from '../data/profile';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path of the page, used for canonical URL and the title block. */
+  sheet?: string;
+  image?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description = profile.description,
+  sheet = 'Index',
+  image = '/og.png',
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.role}`;
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site);
+const ogImage = new URL(image, Astro.site);
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  url: Astro.site?.toString(),
+  jobTitle: 'Electronic & Information Engineering student',
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'Imperial College London' },
+  alumniOf: { '@type': 'School', name: 'Queen Elizabeth’s School' },
+  email: `mailto:${profile.email}`,
+  sameAs: [profile.links.github, profile.links.linkedin],
+  knowsAbout: ['Mechanistic interpretability', 'AI safety', 'Market making', 'Computer vision', 'Embedded systems'],
+};
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="author" content={profile.name} />
+    <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d2a4d" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd ?? person)} />
+
+    <!-- Theme before first paint, so blueprint visitors never see a flash of paper. -->
+    <script is:inline>
+      (() => {
+        const d = document.documentElement;
+        d.classList.add('js');
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'paper' || t === 'blueprint') d.dataset.theme = t;
+        } catch {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <TitleBlock sheet={sheet} />
+    <CommandPalette />
+
+    <script>
+      // Reveal blocks as they enter the viewport.
+      const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        document.documentElement.classList.add('reveal');
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+        );
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('is-in'));
+      }
+
+      // A note for whoever opens the console.
+      const email = document.querySelector<HTMLElement>('[data-palette]')?.dataset.email;
+      console.log(
+        `%cSO-26 %c· you opened the devtools, which is exactly what I would do.\nSay hello: ${email}`,
+        'font: 700 14px monospace; color: #c93816',
+        'font: 12px monospace',
+      );
+    </script>
+  </body>
+</html>

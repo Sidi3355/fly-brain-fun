@@ -1,0 +1,506 @@
+---
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+import { projects, categories, type Project } from '../../data/projects';
+import { pins, profile } from '../../data/profile';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { p, prev: projects[(i - 1 + projects.length) % projects.length], next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+interface Props {
+  p: Project;
+  prev: Project;
+  next: Project;
+}
+
+const { p, prev, next } = Astro.props;
+const stack = p.stack.map((id) => pins.find((x) => x.id === id)).filter((x) => x !== undefined);
+const section = p.tier === 'research' ? { href: '/#research', label: 'Characterisation' } : { href: '/#work', label: 'Typical applications' };
+const sourceNote = {
+  public: null,
+  private: 'Source code is private; happy to walk through it.',
+  none: 'No public repository; the write-up is linked where one exists.',
+}[p.source];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': p.tier === 'research' ? 'ScholarlyArticle' : 'CreativeWork',
+  name: p.title,
+  headline: `${p.title}: ${p.kicker}`,
+  description: p.summary,
+  author: { '@type': 'Person', name: profile.name, url: Astro.site?.toString() },
+  dateCreated: String(p.year),
+  url: new URL(`/work/${p.slug}`, Astro.site).toString(),
+  ...(p.links[0] ? { sameAs: p.links.map((l) => l.href) } : {}),
+};
+---
+
+<Base title={`${p.title}: ${p.kicker}`} description={p.summary} sheet={`${p.part} · ${p.title}`} jsonLd={jsonLd}>
+  <article class="wrap sheet">
+    <nav class="crumbs mono" aria-label="Breadcrumb">
+      <a href="/">Index</a>
+      <span aria-hidden="true">/</span>
+      <a href={section.href}>{section.label}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{p.part}</span>
+    </nav>
+
+    <header class="head">
+      <div class="title">
+        <p class="meta mono">
+          <span class="part">{p.part}</span>
+          <span>{categories[p.category]}</span>
+          <span>{p.date}</span>
+        </p>
+        <h1>{p.title}</h1>
+        <p class="kicker">{p.kicker}</p>
+        {p.context && <p class="ctx mono">{p.context}</p>}
+        <div class="links">
+          {
+            p.links.map((l, i) => (
+              <a class:list={['btn', i === 0 ? 'btn--primary' : 'btn--ghost']} href={l.href}>
+                {l.label}
+                <span class="ext" aria-hidden="true" />
+              </a>
+            ))
+          }
+        </div>
+        {sourceNote && <p class="source mono">{sourceNote}</p>}
+      </div>
+
+      <div class="specs">
+        <p class="specs-title mono">Key specifications</p>
+        <dl>
+          {
+            p.metrics.map((m) => (
+              <div>
+                <dt>{m.label}</dt>
+                <dd>{m.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <figure class="big">
+      <div class="big-frame">
+        <Figure name={p.figure} label={p.figureCaption} uid={`page-${p.slug}`} size="large" />
+      </div>
+      <figcaption class="mono">Fig. 1: {p.figureCaption}</figcaption>
+    </figure>
+
+    <div class="cols">
+      <div class="main">
+        <section>
+          <h2><span class="mono">1</span> Overview</h2>
+          <p class="lead">{p.summary}</p>
+        </section>
+        {
+          p.sections.map((s, i) => (
+            <section>
+              <h2>
+                <span class="mono">{i + 2}</span> {s.heading}
+              </h2>
+              {s.body?.map((b) => (
+                <p>{b}</p>
+              ))}
+              {s.bullets && (
+                <ul>
+                  {s.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          ))
+        }
+        {
+          p.caveats && (
+            <section class="caveats">
+              <h2>
+                <span class="mono">GND</span> Honest caveats
+              </h2>
+              <ul>
+                {p.caveats.map((c) => (
+                  <li>{c}</li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </div>
+
+      <aside class="side">
+        <div class="box">
+          <p class="box-title mono">Pins used</p>
+          <ul class="pins">
+            {
+              stack.map((pin) => (
+                <li>
+                  <span class="pl mono">{pin.label}</span>
+                  <span>{pin.name}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="box">
+          <p class="box-title mono">Components</p>
+          <ul class="tools">
+            {p.tools.map((t) => <li>{t}</li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="pager" aria-label="More projects">
+      <a href={`/work/${prev.slug}`} class="prev">
+        <span class="mono">← {prev.part}</span>
+        <span class="pt">{prev.title}</span>
+      </a>
+      <a href={`/work/${next.slug}`} class="next">
+        <span class="mono">{next.part} →</span>
+        <span class="pt">{next.title}</span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .sheet {
+    padding-top: 28px;
+    padding-bottom: 24px;
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .crumbs a {
+    color: var(--ink-2);
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 64px);
+    align-items: end;
+    margin-top: clamp(28px, 5vw, 56px);
+    padding-bottom: 28px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin: 0 0 14px;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .part {
+    padding: 0 7px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  h1 {
+    font-stretch: 72%;
+    font-weight: 820;
+    font-size: clamp(2.8rem, 8vw, 6.2rem);
+    line-height: 0.88;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .kicker {
+    margin: 14px 0 0;
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-style: italic;
+    color: var(--ink-2);
+    max-width: 42ch;
+  }
+
+  .ctx {
+    margin: 10px 0 0;
+    font-size: 0.78rem;
+    color: var(--accent-ink);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .source {
+    margin: 14px 0 0;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .specs {
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .specs-title {
+    margin: 0;
+    padding: 8px 14px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule-strong);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .specs dl {
+    margin: 0;
+  }
+
+  .specs div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .specs div:last-child {
+    border-bottom: 0;
+  }
+
+  .specs dt {
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+
+  .specs dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-stretch: 80%;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--accent-ink);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .big {
+    margin: clamp(28px, 4vw, 48px) 0 0;
+  }
+
+  .big-frame {
+    padding: clamp(16px, 4vw, 48px);
+    border: 1.5px solid var(--ink);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid-minor) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  .big-frame :global(.fig) {
+    margin: 0 auto;
+  }
+
+  .big figcaption {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: clamp(28px, 5vw, 72px);
+    margin-top: clamp(36px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .main section {
+    margin-bottom: 36px;
+  }
+
+  .main h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule-strong);
+    font-stretch: 85%;
+    font-size: 1.55rem;
+  }
+
+  .main h2 .mono {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--accent-ink);
+  }
+
+  .main p,
+  .main li {
+    font-size: 1.04rem;
+    line-height: 1.7;
+    max-width: 68ch;
+  }
+
+  .lead {
+    font-size: 1.15rem !important;
+  }
+
+  .main ul {
+    padding-left: 20px;
+  }
+
+  .main li {
+    margin: 6px 0;
+  }
+
+  .main li::marker {
+    color: var(--accent);
+  }
+
+  .caveats {
+    padding: 18px 20px 6px;
+    border: 1.5px dashed var(--rule-strong);
+  }
+
+  .caveats h2 {
+    border-bottom: 0 !important;
+  }
+
+  .side {
+    position: sticky;
+    top: calc(var(--header-h) + 20px);
+    display: grid;
+    gap: 18px;
+  }
+
+  .box {
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .box-title {
+    margin: 0;
+    padding: 8px 14px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule-strong);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .pins,
+  .tools {
+    margin: 0;
+    padding: 6px 14px;
+    list-style: none;
+  }
+
+  .pins li,
+  .tools li {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9rem;
+  }
+
+  .pins li:last-child,
+  .tools li:last-child {
+    border-bottom: 0;
+  }
+
+  .pl {
+    min-width: 46px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--accent-ink);
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: clamp(40px, 6vw, 72px);
+    padding-top: 20px;
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid var(--rule-strong);
+    text-decoration: none;
+    background: var(--paper);
+    transition:
+      transform 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  .pager a:hover {
+    color: inherit;
+    border-color: var(--ink);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .pager .next {
+    text-align: right;
+  }
+
+  .pager .mono {
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .pt {
+    font-family: var(--font-display);
+    font-stretch: 85%;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 900px) {
+    .head,
+    .cols {
+      grid-template-columns: 1fr;
+    }
+
+    .side {
+      position: static;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+
+    .links .btn {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>

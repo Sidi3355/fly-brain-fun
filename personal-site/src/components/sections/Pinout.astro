@@ -1,0 +1,453 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { pins, profile, type PinGroup } from '../../data/profile';
+import { projects } from '../../data/projects';
+
+const groupName: Record<PinGroup, string> = {
+  lang: 'Languages',
+  data: 'Data & method',
+  ml: 'ML & AI',
+  build: 'Software',
+  hw: 'Hardware',
+  power: 'Power',
+};
+
+const left = pins.filter((p) => p.n <= 16);
+const right = pins.filter((p) => p.n > 16).sort((a, b) => b.n - a.n); // 32 at the top
+const usage = Object.fromEntries(
+  pins.map((p) => [
+    p.id,
+    projects.filter((x) => x.stack.includes(p.id)).map((x) => ({ part: x.part, title: x.title, slug: x.slug })),
+  ]),
+);
+const data = pins.map((p) => ({ ...p, groupName: groupName[p.group], used: usage[p.id] }));
+const first = data[0];
+---
+
+<section class="sec" id="pinout" aria-labelledby="pinout-title">
+  <div class="wrap">
+    <SectionHead n="4" title="Pin configuration" plain="Skills" id="pinout">
+      <p class="intro">
+        Thirty-two pins, one per skill. Hover or tap a pin to see what it does and which projects drive it.
+      </p>
+    </SectionHead>
+
+    <div class="layout" data-reveal>
+      <div class="chip" data-chip>
+        <ol class="side side-l" aria-label="Pins 1 to 16">
+          {
+            left.map((p) => (
+              <li>
+                <button type="button" class="pin" data-pin={p.id} aria-pressed={p.n === 1 ? 'true' : 'false'} aria-controls="pin-info">
+                  <span class="lbl mono">{p.label}</span>
+                  <span class="leg" aria-hidden="true" />
+                  <span class="n mono" aria-hidden="true">
+                    {p.n}
+                  </span>
+                  <span class="visually-hidden">: {p.name}</span>
+                </button>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="die" aria-hidden="true">
+          <span class="notch"></span>
+          <span class="dot"></span>
+          <span class="die-part">{profile.partNumber}</span>
+          <span class="die-sub mono">EIE · IMPERIAL</span>
+          <span class="die-sub mono">DIP-32 · 2629</span>
+          <span class="die-logo">
+            <svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="14"></circle><path d="M6 20c5-8 9 8 14 0s9 8 14 0"></path></g></svg>
+          </span>
+        </div>
+
+        <ol class="side side-r" aria-label="Pins 32 to 17">
+          {
+            right.map((p) => (
+              <li>
+                <button type="button" class="pin" data-pin={p.id} aria-pressed="false" aria-controls="pin-info">
+                  <span class="n mono" aria-hidden="true">
+                    {p.n}
+                  </span>
+                  <span class="leg" aria-hidden="true" />
+                  <span class="lbl mono">{p.label}</span>
+                  <span class="visually-hidden">: {p.name}</span>
+                </button>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <aside class="info" id="pin-info" aria-live="polite" data-pin-info>
+        <p class="info-top mono">
+          Pin <span data-f="n">{first.n}</span> · <span data-f="label">{first.label}</span> · <span data-f="groupName"
+            >{first.groupName}</span
+          >
+        </p>
+        <h3 data-f="name">{first.name}</h3>
+        <p class="note" data-f="note">{first.note}</p>
+        <p class="used-label mono">Drives</p>
+        <ul class="used" data-used>
+          {
+            first.used.map((u) => (
+              <li>
+                <a href={`/work/${u.slug}`}>
+                  <span class="mono">{u.part}</span> {u.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="hint mono">Tip: tab through the pins with the keyboard.</p>
+      </aside>
+    </div>
+    <script type="application/json" data-pin-data set:html={JSON.stringify(data)} />
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding: clamp(80px, 11vw, 140px) 0 0;
+  }
+
+  .intro {
+    max-width: 60ch;
+    margin: 18px 0 0;
+    color: var(--ink-2);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 80px);
+    align-items: start;
+  }
+
+  .chip {
+    display: grid;
+    grid-template-columns: auto 132px auto;
+    justify-content: center;
+  }
+
+  .side {
+    display: grid;
+    gap: 0;
+    margin: 18px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pin {
+    display: grid;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .side-l .pin {
+    grid-template-columns: 1fr 34px 26px;
+    text-align: right;
+  }
+
+  .side-r .pin {
+    grid-template-columns: 26px 34px 1fr;
+    text-align: left;
+  }
+
+  .lbl {
+    padding: 0 8px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+    transition: color 0.15s;
+  }
+
+  .leg {
+    height: 10px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper-2);
+    transition: background-color 0.15s;
+  }
+
+  .side-l .leg {
+    border-right: 0;
+  }
+
+  .side-r .leg {
+    border-left: 0;
+  }
+
+  .n {
+    font-size: 0.62rem;
+    color: var(--ink-3);
+    text-align: center;
+  }
+
+  .pin:hover .lbl,
+  .pin:focus-visible .lbl,
+  .pin[aria-pressed='true'] .lbl {
+    color: var(--accent-ink);
+  }
+
+  .pin:hover .leg,
+  .pin:focus-visible .leg,
+  .pin[aria-pressed='true'] .leg {
+    background: var(--accent);
+  }
+
+  .pin[aria-pressed='true'] .lbl {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pin:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .die {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 2px solid var(--ink);
+    border-radius: 3px;
+    background:
+      radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--paper) 70%, transparent), transparent 60%),
+      var(--paper-3);
+    box-shadow: var(--shadow);
+  }
+
+  .notch {
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    width: 28px;
+    height: 14px;
+    transform: translateX(-50%);
+    border: 2px solid var(--ink);
+    border-top: 0;
+    border-radius: 0 0 14px 14px;
+    background: var(--paper);
+  }
+
+  .dot {
+    position: absolute;
+    top: 22px;
+    left: 14px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .die-part {
+    font-family: var(--font-display);
+    font-stretch: 70%;
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .die-sub {
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-2);
+  }
+
+  .die-logo svg {
+    width: 34px;
+    height: 34px;
+    margin-top: 10px;
+    color: var(--ink-2);
+  }
+
+  .info {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    min-height: 360px;
+    padding: 22px 24px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .info-top {
+    margin: 0 0 6px;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  h3 {
+    font-stretch: 85%;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+  }
+
+  .note {
+    margin: 10px 0 18px;
+    font-size: 1.02rem;
+    color: var(--ink-2);
+  }
+
+  .used-label {
+    margin: 0 0 6px;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .used {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .used li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .used a {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    padding: 8px 0;
+    text-decoration: none;
+  }
+
+  .used a:hover {
+    padding-left: 4px;
+  }
+
+  .used .mono {
+    min-width: 40px;
+    font-size: 0.7rem;
+    color: var(--ink-3);
+  }
+
+  .used :global(.none) {
+    padding: 8px 0;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--ink-3);
+  }
+
+  .hint {
+    margin: 16px 0 0;
+    font-size: 0.68rem;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+
+    .info {
+      position: static;
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .chip {
+      grid-template-columns: auto 84px auto;
+    }
+
+    .side-l .pin {
+      grid-template-columns: 1fr 22px 20px;
+    }
+
+    .side-r .pin {
+      grid-template-columns: 20px 22px 1fr;
+    }
+
+    .lbl {
+      padding: 0 5px;
+      font-size: 0.7rem;
+    }
+
+    .die-part {
+      font-size: 1.5rem;
+    }
+
+    .die-sub {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  type Pin = {
+    n: number;
+    id: string;
+    label: string;
+    name: string;
+    group: string;
+    groupName: string;
+    note: string;
+    used: { part: string; title: string; slug: string }[];
+  };
+
+  const data: Pin[] = JSON.parse(document.querySelector('[data-pin-data]')?.textContent || '[]');
+  const info = document.querySelector<HTMLElement>('[data-pin-info]');
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-chip] [data-pin]')];
+  let selected = 'py';
+
+  function show(id: string) {
+    const p = data.find((d) => d.id === id);
+    if (!p || !info) return;
+    info.querySelectorAll<HTMLElement>('[data-f]').forEach((el) => {
+      el.textContent = String(p[el.dataset.f as keyof Pin] ?? '');
+    });
+    const ul = info.querySelector('[data-used]');
+    if (!ul) return;
+    ul.replaceChildren();
+    if (!p.used.length) {
+      const li = document.createElement('li');
+      li.className = 'none';
+      li.textContent = p.group === 'power' ? 'Every project on this sheet.' : 'Coursework and study, so far.';
+      ul.append(li);
+    }
+    for (const u of p.used) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `/work/${u.slug}`;
+      const part = document.createElement('span');
+      part.className = 'mono';
+      part.textContent = u.part;
+      a.append(part, ` ${u.title}`);
+      li.append(a);
+      ul.append(li);
+    }
+  }
+
+  buttons.forEach((b) => {
+    const id = b.dataset.pin!;
+    b.addEventListener('mouseenter', () => show(id));
+    b.addEventListener('focus', () => show(id));
+    b.addEventListener('mouseleave', () => show(selected));
+    b.addEventListener('click', () => {
+      selected = id;
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      show(id);
+    });
+  });
+  document.querySelector('[data-chip]')?.addEventListener('focusout', (e) => {
+    if (!(e.currentTarget as HTMLElement).contains((e as FocusEvent).relatedTarget as Node)) show(selected);
+  });
+</script>

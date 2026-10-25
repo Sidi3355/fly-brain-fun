@@ -1,0 +1,150 @@
+---
+import { profile } from '../data/profile';
+
+interface Props {
+  sheet: string;
+}
+
+const { sheet } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="title-block-wrap" aria-label="Site footer">
+  <div class="wrap">
+    <div class="tb" role="group" aria-label="Title block">
+      <div class="cell title">
+        <span class="k">Title</span>
+        <span class="v big">{profile.name}</span>
+        <span class="v small">{profile.role} · {profile.location}</span>
+      </div>
+      <div class="cell">
+        <span class="k">Drawn by</span>
+        <span class="v">S. Oruganti</span>
+      </div>
+      <div class="cell">
+        <span class="k">Sheet</span>
+        <span class="v">{sheet}</span>
+      </div>
+      <div class="cell">
+        <span class="k">Rev</span>
+        <span class="v">{profile.revision}</span>
+      </div>
+      <div class="cell">
+        <span class="k">Scale</span>
+        <span class="v">1 : 1</span>
+      </div>
+      <div class="cell wide">
+        <span class="k">Material</span>
+        <span class="v">Astro, TypeScript, hand-written CSS & canvas. Set in Archivo & IBM Plex.</span>
+      </div>
+      <div class="cell links">
+        <span class="k">Contact</span>
+        <span class="v">
+          <a href={`mailto:${profile.email}`}>Email</a>
+          <a href={profile.links.github} rel="me">GitHub</a>
+          <a href={profile.links.linkedin} rel="me">LinkedIn</a>
+          <a href="/cv">CV</a>
+        </span>
+      </div>
+      <div class="cell">
+        <span class="k">©</span>
+        <span class="v">{year}</span>
+      </div>
+    </div>
+    <p class="fine mono">
+      Do not scale this drawing. Every number on this site traces back to a repository, paper or report. Press <kbd>/</kbd> to search.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .title-block-wrap {
+    padding: 72px 0 40px;
+  }
+
+  .tb {
+    display: grid;
+    grid-template-columns: 2.2fr repeat(4, 1fr);
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 10px 12px;
+    border-right: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .title {
+    grid-row: span 2;
+  }
+
+  .wide {
+    grid-column: span 2;
+  }
+
+  .links {
+    grid-column: span 1;
+  }
+
+  .k {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .v {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .v.big {
+    font-family: var(--font-display);
+    font-stretch: 80%;
+    font-weight: 800;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-top: 4px;
+  }
+
+  .v.small {
+    color: var(--ink-2);
+  }
+
+  .links .v {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .links a {
+    display: inline-block;
+    padding: 2px 0;
+  }
+
+  .fine {
+    margin: 14px 0 0;
+    font-size: 0.7rem;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 820px) {
+    .tb {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .title,
+    .wide,
+    .links {
+      grid-column: span 2;
+      grid-row: auto;
+    }
+  }
+</style>

@@ -1,0 +1,236 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { awards, characteristics, learning } from '../../data/profile';
+---
+
+<section class="sec" id="education" aria-labelledby="education-title">
+  <div class="wrap">
+    <SectionHead n="6" title="Electrical characteristics" plain="Education & awards" id="education" />
+
+    <div class="table-scroll" data-reveal>
+      <table>
+        <caption class="visually-hidden">Education and grades</caption>
+        <thead>
+          <tr>
+            <th scope="col">Parameter</th>
+            <th scope="col">Test conditions</th>
+            <th scope="col" class="c">Min</th>
+            <th scope="col" class="c">Typ</th>
+            <th scope="col" class="c">Max</th>
+            <th scope="col">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            characteristics.map((c) => (
+              <tr>
+                <th scope="row">{c.parameter}</th>
+                <td class="mono cond">{c.condition}</td>
+                <td class="c mono">{c.min || '·'}</td>
+                <td class="c val">{c.typ}</td>
+                <td class="c mono">{c.max || '·'}</td>
+                <td class="notes">{c.note}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="fine mono">Note 1: Min = Typ = Max indicates a part with no observed variation across the batch.</p>
+
+    <div class="cols">
+      <div data-reveal>
+        <h3 class="sub"><span class="mono">6.1</span> Awards & selection</h3>
+        <ul class="awards">
+          {
+            awards.map((a) => (
+              <li>
+                <span class="yr mono">{a.year}</span>
+                <span class="nm">{a.name}</span>
+                <span class="dt">{a.detail}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div data-reveal>
+        <h3 class="sub"><span class="mono">6.2</span> Self-directed study</h3>
+        <ul class="learn">
+          {
+            learning.map((l) => (
+              <li>
+                <span class="nm">{l.name}</span>
+                <span class="dt">{l.detail}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <a class="mono src" href="https://github.com/Sidi3355/Tutorials">Notebooks on GitHub<span class="ext" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding: clamp(80px, 11vw, 140px) 0 0;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  th,
+  td {
+    padding: 11px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.93rem;
+    white-space: nowrap;
+  }
+
+  thead th {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  tbody th {
+    font-weight: 600;
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover {
+    background: var(--accent-wash);
+  }
+
+  .c {
+    text-align: center;
+  }
+
+  .cond {
+    font-size: 0.78rem;
+    color: var(--ink-2);
+  }
+
+  .val {
+    font-family: var(--font-display);
+    font-stretch: 85%;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--accent-ink);
+  }
+
+  .notes {
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+
+  .fine {
+    margin: 10px 0 0;
+    font-size: 0.7rem;
+    color: var(--ink-3);
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(28px, 5vw, 64px);
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+
+  .sub {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-stretch: 85%;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+  }
+
+  .sub .mono {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+
+  .awards,
+  .learn {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .awards li {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    gap: 12px;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .learn li {
+    display: grid;
+    gap: 2px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .yr {
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .nm {
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .dt {
+    font-size: 0.88rem;
+    color: var(--ink-2);
+  }
+
+  .awards .dt {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--accent-ink);
+    text-align: right;
+  }
+
+  .src {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    margin-top: 6px;
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 760px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+
+    .awards li {
+      grid-template-columns: 44px 1fr;
+    }
+
+    .awards .dt {
+      grid-column: 2;
+      text-align: left;
+    }
+  }
+</style>

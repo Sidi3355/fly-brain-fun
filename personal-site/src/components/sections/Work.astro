@@ -1,0 +1,248 @@
+---
+import SectionHead from '../SectionHead.astro';
+import ProjectCard from '../ProjectCard.astro';
+import { featured, more, categories, type Category } from '../../data/projects';
+
+const present = [...new Set(featured.map((p) => p.category))] as Category[];
+---
+
+<section class="sec" id="work" aria-labelledby="work-title">
+  <div class="wrap">
+    <SectionHead n="3" title="Typical applications" plain="Projects" id="work">
+      <div class="filters" role="group" aria-label="Filter projects" data-filters>
+        <button type="button" aria-pressed="true" data-filter="all">All <span class="count mono">{featured.length}</span></button>
+        {
+          present.map((c) => (
+            <button type="button" aria-pressed="false" data-filter={c}>
+              {categories[c]} <span class="count mono">{featured.filter((p) => p.category === c).length}</span>
+            </button>
+          ))
+        }
+      </div>
+    </SectionHead>
+
+    <div class="cards" data-cards>
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+    <p class="live mono" aria-live="polite" data-filter-status></p>
+
+    <div class="drawer" data-reveal>
+      <h3 class="drawer-title">
+        <span class="mono">3.{featured.length + 1}</span> More from the parts drawer
+      </h3>
+      <ul class="rows">
+        {
+          more.map((p) => (
+            <li>
+              <a href={`/work/${p.slug}`}>
+                <span class="mono part">{p.part}</span>
+                <span class="name">{p.title}</span>
+                <span class="what">{p.kicker}</span>
+                <span class="mono year">{p.year}</span>
+                <span class="arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding: clamp(80px, 11vw, 140px) 0 0;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .filters button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .filters button:hover {
+    border-color: var(--ink);
+  }
+
+  .filters button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .count {
+    font-size: 0.66rem;
+    opacity: 0.7;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(18px, 2.4vw, 28px);
+  }
+
+  .live {
+    min-height: 1em;
+    margin: 10px 0 0;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .drawer {
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+
+  .drawer-title {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-stretch: 85%;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+  }
+
+  .drawer-title .mono {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .rows li {
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .rows a {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1.6fr) 56px 24px;
+    align-items: center;
+    gap: 16px;
+    min-height: 56px;
+    padding: 10px 6px;
+    text-decoration: none;
+    transition:
+      background-color 0.2s,
+      padding 0.25s var(--ease);
+  }
+
+  .rows a:hover {
+    background: var(--accent-wash);
+    color: inherit;
+    padding-left: 12px;
+  }
+
+  .part {
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .name {
+    font-family: var(--font-display);
+    font-stretch: 85%;
+    font-weight: 700;
+    font-size: 1.12rem;
+    line-height: 1.15;
+  }
+
+  .what {
+    font-size: 0.9rem;
+    color: var(--ink-2);
+    line-height: 1.35;
+  }
+
+  .year {
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    text-align: right;
+  }
+
+  .arrow {
+    font-family: var(--font-mono);
+    transition: transform 0.25s var(--ease);
+  }
+
+  .rows a:hover .arrow {
+    transform: translateX(4px);
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 1060px) {
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 680px) {
+    .cards {
+      grid-template-columns: 1fr;
+    }
+
+    .rows a {
+      grid-template-columns: 48px minmax(0, 1fr) 20px;
+      gap: 4px 12px;
+    }
+
+    .what {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .year {
+      display: none;
+    }
+
+    .arrow {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+    }
+  }
+</style>
+
+<script>
+  const wrap = document.querySelector<HTMLElement>('[data-filters]');
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-cards] > [data-cat]')];
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+
+  wrap?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+    if (!btn) return;
+    const f = btn.dataset.filter;
+    wrap.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    let n = 0;
+    cards.forEach((c) => {
+      const show = f === 'all' || c.dataset.cat === f;
+      c.hidden = !show;
+      if (show) {
+        n++;
+        c.classList.add('is-in');
+      }
+    });
+    if (status) status.textContent = f === 'all' ? '' : `Showing ${n} of ${cards.length}`;
+  });
+</script>

@@ -1,0 +1,246 @@
+---
+import SectionHead from '../SectionHead.astro';
+import { profile } from '../../data/profile';
+
+const code = [
+  { seg: 'SO-26', key: 'Part', val: `${profile.name}, 2026 revision` },
+  { seg: 'R', key: 'R', val: 'Research: interpretability, evaluation' },
+  { seg: 'Q', key: 'Q', val: 'Quant: market making, backtests' },
+  { seg: 'B', key: 'B', val: 'Build: web, native, embedded' },
+  { seg: 'LDN', key: 'Ships from', val: 'London, UK' },
+];
+---
+
+<section class="sec" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <SectionHead n="7" title="Ordering information" plain="Contact" id="contact" />
+
+    <div class="grid">
+      <div class="order" data-reveal>
+        <p class="label mono">7.1 Ordering code</p>
+        <div class="code" aria-label="Ordering code SO-26 R Q B LDN, decoded below">
+          <div class="segs" aria-hidden="true">
+            <span>SO-26</span><span class="sep">–</span><span>R</span><span>Q</span><span>B</span><span class="sep">–</span><span>LDN</span>
+          </div>
+          <ul class="legend">
+            {
+              code.map((c, i) => (
+                <li style={`--i:${i}`}>
+                  <span class="k mono">{c.key}</span>
+                  <span class="v">{c.val}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="contact" data-reveal>
+        <p class="label mono">7.2 Sales & support</p>
+        <p class="pitch">
+          The fastest way to reach me is email. Happy to talk interpretability, market microstructure, or why your laser
+          cutter needs a camera.
+        </p>
+        <ul class="channels">
+          <li>
+            <span class="k mono">Email</span>
+            <a href={`mailto:${profile.email}`} class="v">{profile.email.split('@')[0]}@<wbr />{profile.email.split('@')[1]}</a>
+            <button type="button" class="copy mono" data-copy={profile.email} aria-label="Copy email address">Copy</button>
+          </li>
+          <li>
+            <span class="k mono">LinkedIn</span>
+            <a href={profile.links.linkedin} class="v" rel="me">in/siddarth-oruganti<span class="ext" aria-hidden="true"></span></a>
+          </li>
+          <li>
+            <span class="k mono">GitHub</span>
+            <a href={profile.links.github} class="v" rel="me">Sidi3355<span class="ext" aria-hidden="true"></span></a>
+          </li>
+          <li>
+            <span class="k mono">CV</span>
+            <a href="/cv" class="v">Printable CV <span aria-hidden="true">→</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sec {
+    padding: clamp(80px, 11vw, 140px) 0 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 72px);
+    align-items: start;
+  }
+
+  .label {
+    margin: 0 0 12px;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .code {
+    padding: 22px 22px 10px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .segs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-family: var(--font-display);
+    font-stretch: 72%;
+    font-weight: 800;
+    font-size: clamp(1.9rem, 4vw, 3.1rem);
+    line-height: 1;
+  }
+
+  .segs span:not(.sep) {
+    padding: 2px 8px;
+    border: 1.5px solid var(--ink);
+  }
+
+  .segs span:nth-child(3),
+  .segs span:nth-child(4),
+  .segs span:nth-child(5) {
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+
+  .sep {
+    align-self: center;
+    color: var(--ink-3);
+  }
+
+  .legend {
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .legend li {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 12px;
+    padding: 9px 0 9px 14px;
+    border-top: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .legend li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 19px;
+    width: 8px;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  .k {
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .legend .k {
+    color: var(--accent-ink);
+  }
+
+  .v {
+    font-size: 0.98rem;
+  }
+
+  .pitch {
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+    line-height: 1.5;
+    max-width: 40ch;
+  }
+
+  .channels {
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .channels li {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .channels .v {
+    min-width: 0;
+    overflow-wrap: break-word;
+    font-weight: 500;
+  }
+
+  .copy {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    font-size: 0.72rem;
+    cursor: pointer;
+  }
+
+  .copy:hover {
+    border-color: var(--ink);
+  }
+
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .code {
+      padding: 18px 16px 8px;
+    }
+
+    .segs {
+      flex-wrap: nowrap;
+      gap: 4px;
+      font-size: 1.55rem;
+    }
+
+    .segs span:not(.sep) {
+      padding: 2px 6px;
+    }
+
+    .channels li {
+      grid-template-columns: 72px minmax(0, 1fr) auto;
+    }
+
+    .legend li {
+      grid-template-columns: 76px 1fr;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy || '');
+        b.textContent = 'Copied ✓';
+      } catch {
+        b.textContent = 'Select & copy';
+      }
+      setTimeout(() => (b.textContent = 'Copy'), 1800);
+    });
+  });
+</script>

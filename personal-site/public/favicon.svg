@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .b{fill:#f3f0e8;stroke:#15171c}.p{stroke:#15171c}.d{fill:#c93816}.t{fill:#15171c}
+    @media (prefers-color-scheme:dark){.b{fill:#0d2a4d;stroke:#eaf2ff}.p{stroke:#eaf2ff}.d{fill:#ffc247}.t{fill:#eaf2ff}}
+  </style>
+  <path class="p" d="M2 10h5M2 16h5M2 22h5M25 10h5M25 16h5M25 22h5" stroke-width="2"/>
+  <rect class="b" x="7" y="4" width="18" height="24" rx="1.5" stroke-width="2"/>
+  <circle class="d" cx="11" cy="8" r="1.8"/>
+  <text class="t" x="16" y="21" text-anchor="middle" font-family="Arial Narrow,Arial,sans-serif" font-weight="700" font-size="9" letter-spacing=".3">SO</text>
+</svg>
