@@ -1,0 +1,15 @@
+[data-contact-form] .contact-trap{display:none}
+[data-contact-form] .contact-campaign{margin:0 0 24px;padding:16px 18px;border-left:3px solid #003939;background:#edf2ec;color:#003939;font-size:16px;line-height:1.6}
+[data-contact-form][aria-busy="true"]{cursor:progress}
+[data-contact-form] button[type="submit"]{min-width:205px}
+[data-contact-form] button[type="submit"]:disabled{cursor:progress;opacity:.7;transform:none}
+[data-contact-error]{margin-top:18px;padding:14px 16px;border:1px solid #dabaa1;border-radius:3px;background:#fbf0e6;color:#773e27;font-size:14px;line-height:1.6;outline-offset:4px}
+[data-contact-error] a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+[data-contact-error] a:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.contact-receipt{padding:20px 0}
+.contact-receipt>h2,.contact-receipt>h3{margin:16px 0;font-size:clamp(32px,4vw,44px);line-height:1.15;letter-spacing:-.035em}
+.contact-receipt>p{max-width:440px;font-size:16px;line-height:1.7;color:var(--muted,#617167)}
+.contact-receipt strong{color:var(--ink,#18372c);font-weight:500;overflow-wrap:anywhere}
+.contact-receipt .hero-actions{margin-top:28px}
+#booking-ready.contact-receipt>p{font-size:15px;line-height:1.7}
+.contact-receipt .request-actions{margin:24px 0 0}
