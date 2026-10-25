@@ -1,0 +1,880 @@
+{
+ "overview": {
+  "eyebrow": "THE ENTANGL PLATFORM",
+  "title": "One facility.\nEvery decision connected.",
+  "lead": "Your drawings, equipment, procedures, and operating history belong in the same conversation. Give every team the context behind the work—and a clearer next action.",
+  "cta": "Discuss your first workflow",
+  "ctaHref": "/demo?workflow=Something+else&context=Walk+through+the+connected+Entangl+platform+using+one+site+workflow.",
+  "demoLabel": "See the connections",
+  "pills": [
+   "Your facility context",
+   "Your engineers’ decisions",
+   "Your operating record"
+  ],
+  "demoKicker": "EXPLORE AN INTERACTIVE EXAMPLE",
+  "demoTitle": "Follow the work across the platform.",
+  "demoIntro": "Choose a situation, then select a workflow. See how the same site information supports a different decision.",
+  "valueTitle": "The connection is\nwhere the value starts.",
+  "valueIntro": "Every handoff should carry the equipment, the source, the decision, and the latest version with it.",
+  "value": [
+   [
+    "Less rebuilding of context",
+    "Use the facility information behind one task in the next procedure or review. Keep equipment names, applicable documents, and site requirements together."
+   ],
+   [
+    "More useful time for experts",
+    "Put preparation and evidence gathering closer to the work, so engineers can spend their attention on judgement, exceptions, and approval."
+   ],
+   [
+    "A record people can follow",
+    "Connect a finding to its source and a decision to its owner. Extend that record into field evidence and customer oversight within the agreed scope."
+   ]
+  ],
+  "detailTitle": "Give each system\na clear job.",
+  "detailIntro": "A useful deployment fits the operating process you already have.",
+  "detail": [
+   [
+    "Your document systems",
+    "Keep drawings, manuals, and procedures accessible. Agree which versions are authoritative and how updates enter the site context."
+   ],
+   [
+    "Your CMMS or change system",
+    "Keep ownership of the work order and approved record clear. Test the document, status, and revision handoff your process requires."
+   ],
+   [
+    "Your monitoring systems",
+    "BMS, EPMS, or SCADA can supply measurements. Telemetry scope includes point mapping, timestamps, data quality, and the response boundary."
+   ],
+   [
+    "Your people",
+    "Engineers resolve uncertainty. Authorized reviewers approve work. Field teams confirm conditions. Customer access follows the scope you approve."
+   ]
+  ],
+  "evalIntro": "Choose a representative task, record the baseline, and agree what a useful result must demonstrate.",
+  "bring": [
+   "One site and a workflow worth improving",
+   "A representative procedure and its source documents",
+   "The engineer and process owner who can judge the result"
+  ],
+  "measure": [
+   "Quality of the output and correction effort",
+   "Time from preparation to an accepted result",
+   "Fit with approvals, exports, and existing systems"
+  ],
+  "faq": [
+   [
+    "What can we use first?",
+    "Procedure creation and review, grounded in facility information, are the core starting point. Use the module pages to define your first task. We will demonstrate the current capability and separate any integration or development work before you commit."
+   ],
+   [
+    "Is this a replacement for our CMMS or BMS?",
+    "It can start alongside them. Decide where work orders, telemetry, and approved records live, then define the handoffs. A useful evaluation proves the exchange with your actual systems and document formats."
+   ],
+   [
+    "Do we have to model the entire campus first?",
+    "Start with the system involved in the first evaluation. A bounded set of equipment, current documents, and a site expert can expose the gaps that matter before you expand the scope."
+   ],
+   [
+    "How is this different from giving documents to a general AI assistant?",
+    "Evaluate the complete job: facility relationships, applicable sources, specific findings, reviewer decisions, and the accepted output. Compare correction work and missed issues on the same task, rather than comparing only the first draft."
+   ],
+   [
+    "What will IT and security need to review?",
+    "The proposed deployment, data flows, processing providers, identity and access, retention, and support responsibilities. The enterprise pages provide the questions to take into that review; request the current evidence for your deployment."
+   ],
+   [
+    "How do we build a business case?",
+    "Record your current preparation, review, correction, and handoff effort. Set a quality threshold, test representative work, and include subscription, implementation, integration, and customer time in the cost. Expand when the evidence supports it."
+   ]
+  ],
+  "scope": "Start with procedure creation, review, and site context. Fieldwork, telemetry, and shared visibility are scoped with your deployment. Maintenance planning and portfolio performance are planned workflows.",
+  "closeTitle": "Bring one workflow.\nSee the whole connection.",
+  "closeCopy": "Leave the conversation with a defined starting scope, the information it needs, and a practical way to judge the result.",
+  "related": [
+   "/platform/site-model",
+   "/platform/procedures",
+   "/platform/review",
+   "/platform/fieldwork",
+   "/platform/telemetry",
+   "/platform/maintenance",
+   "/platform/visibility",
+   "/platform/portfolio"
+  ]
+ },
+ "site-model": {
+  "eyebrow": "FACILITY KNOWLEDGE",
+  "title": "Know the equipment.\nUnderstand the connections.",
+  "lead": "A procedure names an asset. Your engineer needs to know what supplies it, what depends on it, and which information can be trusted. Start with a site model your team can inspect and validate.",
+  "cta": "Walk through a site model",
+  "ctaHref": "/demo?workflow=Site+model&context=Walk+through+a+site+model+using+our+one-line%2C+asset+information+and+a+representative+system.",
+  "demoLabel": "Trace a connection",
+  "pills": [
+   "Equipment relationships",
+   "Document provenance",
+   "Visible information gaps"
+  ],
+  "demoKicker": "EXPLORE AN INTERACTIVE EXAMPLE",
+  "demoTitle": "One asset.\nFollow what it touches.",
+  "demoIntro": "Select equipment, switch the evidence source, and introduce a drawing revision. Connectivity and live operating state answer different questions.",
+  "valueTitle": "Make site knowledge\ninspectable.",
+  "valueIntro": "The model becomes useful when an engineer can follow the connection and challenge the information behind it.",
+  "value": [
+   [
+    "Connect the equipment",
+    "Bring one-lines, asset lists, internal components, and alternate paths into the scope your team validates."
+   ],
+   [
+    "Keep the source close",
+    "Relate manuals, sequences of operation, drawings, aliases, and procedure references to the equipment they describe."
+   ],
+   [
+    "Keep uncertainty visible",
+    "Distinguish a documented arrangement from a field observation or a sensor reading. Give missing or conflicting information a clear owner."
+   ]
+  ],
+  "detailTitle": "Build from the information\nyou already have.",
+  "detailIntro": "A focused first system gives your site experts something concrete to check.",
+  "detail": [
+   [
+    "Drawings and asset data",
+    "Current one-lines and asset information establish equipment names, relationships, and the boundary of the first model."
+   ],
+   [
+    "Manuals and operating requirements",
+    "Add relevant OEM instructions, sequences of operation, existing procedures, and site rules to give the equipment practical context."
+   ],
+   [
+    "Site validation",
+    "Have the people who know the facility verify aliases, connections, and important omissions. Keep documented and observed differences visible."
+   ],
+   [
+    "Change control",
+    "Agree who supplies revisions, who validates changes, and which dependent procedures need another look when the site record changes."
+   ]
+  ],
+  "evalIntro": "Choose a representative task, record the baseline, and agree what a useful result must demonstrate.",
+  "bring": [
+   "One current one-line and the related asset information",
+   "Manuals or sequences for the system in scope",
+   "A site expert who can validate names and relationships"
+  ],
+  "measure": [
+   "Correct equipment mapping and documented connections",
+   "Useful handling of gaps, aliases, and revisions",
+   "Traceability from a procedure to its site context"
+  ],
+  "faq": [
+   [
+    "Is this just a 3D visualization?",
+    "The useful foundation is the equipment and its relationships to sources and work. A visual model helps people inspect that context; it does not replace validation of the underlying equipment, connections, or operating conditions."
+   ],
+   [
+    "Do we need perfect as-built drawings first?",
+    "Start with what you have for a bounded system. Identify missing, ambiguous, or outdated information with your site team and decide what must be resolved before a particular workflow can be evaluated."
+   ],
+   [
+    "Can it handle equipment aliases and internal components?",
+    "Include those in the model scope. Test the names people use in procedures against the drawings and asset records, including internal components and alternate paths that affect the work."
+   ],
+   [
+    "Does a connection mean the equipment is energized?",
+    "No. Connectivity and operating state are separate. A drawing records an arrangement; a field check records an observation; telemetry records a measurement with a timestamp. Each must retain its provenance."
+   ],
+   [
+    "What happens when our site changes?",
+    "Agree a revision process: ingest the new information, validate the affected relationships, and identify work that may need to be reviewed again. The example shows why source changes should remain visible."
+   ],
+   [
+    "How does this help with a new acquisition or facility-manager handover?",
+    "A validated site record gives the incoming team a starting point for equipment, source documents, and open gaps. Define the handover responsibilities and the procedures that still need to be confirmed for the new operator."
+   ]
+  ],
+  "scope": "Site context supports the core procedure workflows. Live states require the relevant integration, verified mapping, and timestamps.",
+  "closeTitle": "Bring a one-line.\nLet’s follow the site.",
+  "closeCopy": "Choose one system and the work it supports. We’ll map the starting information, validation needs, and a useful first demonstration.",
+  "related": [
+   "/platform/procedures",
+   "/platform/review",
+   "/platform/telemetry"
+  ]
+ },
+ "procedures": {
+  "eyebrow": "PROCEDURE CREATION",
+  "title": "Your procedure.\nYour site, in every detail.",
+  "lead": "Start with the work you need to do. Entangl helps turn your site information, operating rules, and required format into a procedure your engineers can review.",
+  "cta": "Book a procedure walkthrough",
+  "ctaHref": "/demo?workflow=Writing+procedures&context=Demonstrate+procedure+generation+using+our+task%2C+site+documents+and+template.",
+  "demoLabel": "Shape an example draft",
+  "pills": [
+   "MOP · SOP · EOP",
+   "Site-specific context",
+   "Your template and approvals"
+  ],
+  "demoKicker": "EXPLORE AN INTERACTIVE EXAMPLE",
+  "demoTitle": "Change the brief.\nWatch the draft change.",
+  "demoIntro": "Choose a procedure type and a site. Remove a source to see which information the reviewer would still need.",
+  "valueTitle": "A useful first draft\nalready has the context.",
+  "valueIntro": "The starting point is your operation: the equipment, the task, the constraints, and the format the team will use.",
+  "value": [
+   [
+    "Specific to the equipment",
+    "Bring one-lines, asset information, manuals, and sequences of operation into preparation. Check dependencies and applicable instructions with the site team."
+   ],
+   [
+    "Built around your requirements",
+    "Use the sections, terminology, risk methodology, approval fields, and output requirements your organization expects."
+   ],
+   [
+    "Ready for an engineer’s judgement",
+    "Make missing information, stop conditions, contingency references, and approval needs explicit before the draft enters the field process."
+   ]
+  ],
+  "detailTitle": "Keep the detail\nthat makes it yours.",
+  "detailIntro": "Use a finished procedure as the reference for what a good output should look like.",
+  "detail": [
+   [
+    "Task and boundary",
+    "Define the equipment, work scope, affected systems, and exclusions so a draft does not quietly grow beyond the job."
+   ],
+   [
+    "Site rules and constraints",
+    "Bring access restrictions, maintenance windows, customer requirements, permits, and the site’s approved risk approach."
+   ],
+   [
+    "Template and level of detail",
+    "Test tables, headings, signatures, terminology, and export formatting. Confirm the right level of instruction for the people doing the work."
+   ],
+   [
+    "Review and revisions",
+    "Check the draft, resolve open questions, and retain the approved version in the system your process requires. Reassess site-specific details before reuse."
+   ]
+  ],
+  "evalIntro": "Choose a representative task, record the baseline, and agree what a useful result must demonstrate.",
+  "bring": [
+   "One task and the equipment involved",
+   "The relevant drawings, manuals, and site rules",
+   "Your template and a procedure you consider excellent"
+  ],
+  "measure": [
+   "Drafting, review, and correction time together",
+   "Missing details and unsupported assumptions",
+   "Acceptance of the final document and its format"
+  ],
+  "faq": [
+   [
+    "Can it write MOPs, SOPs, and EOPs?",
+    "Those are core procedure types. The scope, equipment, applicable documents, and output requirements determine the useful result. Start with a task your team understands well enough to assess the generated draft."
+   ],
+   [
+    "Can we keep our Word template?",
+    "Bring the actual template and a completed example. We will test its headings, tables, risk sections, signatures, and export requirements as part of the configuration. Treat formatting fidelity as an evaluation criterion."
+   ],
+   [
+    "What if the drawings or manuals are missing?",
+    "Identify the gap and narrow the work to what the available evidence supports. The draft still needs a site expert to resolve missing states, instructions, or requirements. A plausible sentence is not a substitute for that information."
+   ],
+   [
+    "Can we edit the output or reuse a procedure at another site?",
+    "The engineer reviews and adapts the draft. A reusable structure can help, but equipment, topology, site rules, customer restrictions, and approvals must be checked again for the destination site."
+   ],
+   [
+    "Will it include contingencies and stop conditions?",
+    "Include those in the agreed output requirements and test them against the task. Your reviewer should assess prerequisites, conditions for stopping, escalation, and recovery references with the same care as the main work."
+   ],
+   [
+    "Does generation authorize the work?",
+    "No. The result is a draft for review. The site’s authorized people decide whether a procedure is acceptable and whether field work may proceed."
+   ]
+  ],
+  "scope": "Procedure creation is a core workflow. Confirm supported inputs, template configuration, and export requirements with a representative document.",
+  "closeTitle": "Bring the procedure\nyou wish took less time.",
+  "closeCopy": "We’ll use your task and required output to define a useful demonstration, including what your reviewers will need to check.",
+  "related": [
+   "/platform/site-model",
+   "/platform/review",
+   "/platform/fieldwork"
+  ]
+ },
+ "review": {
+  "eyebrow": "PROCEDURE REVIEW",
+  "title": "Find the issue.\nFollow the evidence.",
+  "lead": "A finding should tell your engineer what to examine, where it appears, and why it matters. Review procedures against site context and keep the decision with the people responsible for the work.",
+  "cta": "Book a review walkthrough",
+  "ctaHref": "/demo?workflow=Reviewing+procedures&context=Review+one+of+our+existing+procedures+and+inspect+the+evidence+behind+each+finding.",
+  "demoLabel": "Inspect a review",
+  "pills": [
+   "Existing procedures",
+   "Source-backed findings",
+   "Human review and approval"
+  ],
+  "demoKicker": "EXPLORE AN INTERACTIVE EXAMPLE",
+  "demoTitle": "A finding is the start\nof a decision.",
+  "demoIntro": "Inspect three sample findings. Request a revision or accept a finding with a reason, then see what the review status actually means.",
+  "valueTitle": "Give your reviewer\nsomething they can act on.",
+  "valueIntro": "The number of flags is less useful than the quality of the decisions those flags support.",
+  "value": [
+   [
+    "Find the exact concern",
+    "Locate the step, reference, or equipment relationship that needs attention. Keep the surrounding task visible when assessing the finding."
+   ],
+   [
+    "Check the source",
+    "Compare the procedure against the relevant drawing, document revision, or agreed site requirement. Resolve gaps in the evidence before relying on a conclusion."
+   ],
+   [
+    "Keep the decision accountable",
+    "Capture a correction, a request for information, or an acceptance with a reason. Separate software review, engineer review, and authorization to proceed."
+   ]
+  ],
+  "detailTitle": "Make review quality\nvisible to the buyer.",
+  "detailIntro": "A strong evaluation includes both known problems and procedures that should pass.",
+  "detail": [
+   [
+    "Relevant checks",
+    "Choose what to assess: reference accuracy, equipment names, dependencies, prerequisites, sequence, and required contingencies within the agreed scope."
+   ],
+   [
+    "Missed issues",
+    "Use a benchmark set your engineers understand. Record which meaningful issues are identified and which remain for the human reviewer."
+   ],
+   [
+    "False positives",
+    "Include valid examples. Measure how much time engineers spend dismissing concerns and whether the explanation supports an efficient decision."
+   ],
+   [
+    "Revision control",
+    "Change a source or a procedure and inspect what must be reviewed again. Agree how decisions relate to the version that is ultimately approved."
+   ]
+  ],
+  "evalIntro": "Choose a representative task, record the baseline, and agree what a useful result must demonstrate.",
+  "bring": [
+   "One existing procedure in its normal format",
+   "The supporting site information and review requirements",
+   "Known issues and a valid example for comparison"
+  ],
+  "measure": [
+   "Meaningful findings, missed issues, and false positives",
+   "Time to reach an accepted review outcome",
+   "Traceability of sources, decisions, and versions"
+  ],
+  "faq": [
+   [
+    "Can we review the procedures we already use?",
+    "Yes. Existing-procedure review is a core starting point. Test a representative file, its supporting site information, and the checks your engineers care about before expanding to a larger library."
+   ],
+   [
+    "What kinds of issues should we test for?",
+    "Start with equipment and document references, applicable revisions, dependencies, prerequisites, sequencing, and required recovery information. The demonstrated scope should be explicit; no generic score establishes that all hazards have been assessed."
+   ],
+   [
+    "What if the reviewer disagrees with a finding?",
+    "Inspect the cited evidence and the task context. The reviewer may request a correction, seek more information, or accept the concern with a reason. Demonstrate how that decision and its version are retained in your deployed workflow."
+   ],
+   [
+    "Is a reviewed procedure automatically approved?",
+    "No. Completing a software review, recording an engineer’s assessment, and authorizing work are separate events. The approval process should identify who can make each decision."
+   ],
+   [
+    "What happens when someone changes the procedure?",
+    "A decision applies to the version and information that were reviewed. Agree which edits require another review and how the approved record is kept distinct from a later draft."
+   ],
+   [
+    "How should we measure whether the review is good?",
+    "Use known issues and valid procedures. Measure meaningful findings, missed issues, false positives, the time to resolve them, and total effort to reach an acceptable result. A large flag count alone is not evidence of quality."
+   ]
+  ],
+  "scope": "Existing-procedure review is a core workflow. Define the checks, approval roles, document formats, and revision handling for your deployment.",
+  "closeTitle": "Bring a procedure\nyour team knows inside out.",
+  "closeCopy": "Use the next conversation to inspect the findings, challenge the evidence, and decide what the review must prove.",
+  "related": [
+   "/platform/site-model",
+   "/platform/procedures",
+   "/platform/visibility"
+  ]
+ },
+ "fieldwork": {
+  "eyebrow": "FIELDWORK AND TRAINING",
+  "title": "The right procedure.\nRight where the work is.",
+  "lead": "Bring the procedure, the equipment context, and the next required check to the person on site. Explore guided execution and dry runs that keep the record connected to the work.",
+  "cta": "Walk through fieldwork",
+  "ctaHref": "/demo?workflow=Fieldwork+and+training&context=Demonstrate+tablet+execution+and+dry-run+training+with+our+procedure+and+field+conditions.",
+  "demoLabel": "Try a tablet rehearsal",
+  "pills": [
+   "Guided tablet experience",
+   "Evidence at the step",
+   "Rehearsal before execution"
+  ],
+  "demoKicker": "EXPLORE AN INTERACTIVE EXAMPLE",
+  "demoTitle": "Rehearse the checks\nbefore the real job.",
+  "demoIntro": "Work through a four-step tablet example. Choose the wrong equipment or report an issue to see the hold state. This rehearsal contains no equipment-control instructions.",
+  "valueTitle": "Help the team\nkeep the context in hand.",
+  "valueIntro": "A clear field workflow supports the people carrying out the task and the people reviewing what happened.",
+  "value": [
+   [
+    "Make the next step obvious",
+    "Keep the relevant procedure version, equipment identity, instructions, and required evidence together in the field view."
+   ],
+   [
+    "Make a stop easy to record",
+    "Capture mismatches, unexpected observations, and escalation needs alongside the task instead of losing them in a separate conversation."
+   ],
+   [
+    "Practise with site context",
+    "Rehearse how the team uses the procedure, recognizes missing information, and coordinates a response before a live maintenance window."
+   ]
+  ],
+  "detailTitle": "The field record\nshould tell the whole story.",
+  "detailIntro": "Define the evidence the engineer needs at each step, then test it under actual site conditions.",
+  "detail": [
+   [
+    "Before the job",
+    "Confirm the approved procedure version, personnel, equipment identity, authorizations, and the prerequisites for starting."
+   ],
+   [
+    "During the work",
+    "Decide where readings, observations, evidence, witnesses, exceptions, and stop decisions belong in the guided task."
+   ],
+   [
+    "At handoff",
+    "Keep completion, outstanding issues, and evidence clear for the supervisor and the next shift. Agree where the accepted execution record lives."
+   ],
+   [
+    "In training",
+    "Use the same site context to rehearse decisions while keeping practice records and live-work authorization separate."
+   ]
+  ],
+  "evalIntro": "Choose a representative task, record the baseline, and agree what a useful result must demonstrate.",
+  "bring": [
+   "One procedure people execute in the field",
+   "The device and connectivity conditions at your site",
+   "Required readings, evidence, witnesses, and handoffs"
+  ],
+  "measure": [
+   "Whether operators can follow and stop the task clearly",
+   "Completeness of the execution record",
+   "Behavior during connectivity loss and reconnection"
+  ],
+  "faq": [
+   [
+    "Is this available as an iPad workflow?",
+    "The fieldwork direction includes a tablet experience. Confirm the supported application, devices, operating-system versions, deployment method, and the procedure capabilities for your environment in the walkthrough."
+   ],
+   [
+    "Will it work when Wi-Fi drops?",
+    "Offline behavior must be demonstrated for the proposed deployment. Test access to the approved procedure, saved observations, queued actions, conflicts, and reconnection before relying on it in the field."
+   ],
+   [
+    "Can we require equipment checks, evidence, or a witness?",
+    "Use your procedure to define where those requirements belong. The evaluation should demonstrate the required gate, what happens when it is not met, and how the result appears in the final execution record."
+   ],
+   [
+    "What happens when the operator sees something unexpected?",
+    "The workflow should make the stop or exception visible, retain the observation, and point to the site’s escalation process. Agree how supervision and authorization to resume are handled."
+   ],
+   [
+    "Can new staff practise without changing live records?",
+    "Dry runs are part of the fieldwork and training direction. Verify the boundary between a rehearsal and live work, including the records it creates, who can see them, and what is required before someone is authorized to execute."
+   ],
+   [
+    "Does a completed tablet checklist prove the work was safe?",
+    "It records the checks and observations captured in that workflow. Site authorization, competent personnel, actual conditions, and the required safety process still determine whether and how work may proceed."
+   ]
+  ],
+  "scope": "Fieldwork and training are scoped with your deployment. Confirm approved devices, evidence capture, offline behavior, and synchronization before relying on the workflow on site.",
+  "closeTitle": "Bring the procedure.\nWe’ll walk it with you.",
+  "closeCopy": "Use a real field task to define the device, checks, evidence, and connectivity behavior your team needs.",
+  "related": [
+   "/platform/procedures",
+   "/platform/review",
+   "/platform/visibility"
+  ]
+ },
+ "telemetry": {
+  "eyebrow": "AI TELEMETRY",
+  "title": "Alarms tell you something.\nContext tells you where to look.",
+  "lead": "Bring related signals into an issue your operator can investigate. Explore the path from a measurement to the affected equipment, supporting evidence, and a coordinated response.",
+  "cta": "Discuss your telemetry workflow",
+  "ctaHref": "/demo?workflow=Telemetry&context=Replay+a+historical+incident+and+map+its+signals%2C+equipment%2C+triage+and+response+workflow.",
+  "demoLabel": "Investigate an incident",
+  "pills": [
+   "Related signals, one issue",
+   "Equipment and customer context",
+   "Operator-led response"
+  ],
+  "demoKicker": "EXPLORE AN INTERACTIVE EXAMPLE",
+  "demoTitle": "Three signals.\nA connected investigation.",
+  "demoIntro": "Replay a fictional cooling incident, group the signals, and attach a response reference. Mark a sensor stale to see the uncertainty change.",
+  "valueTitle": "Bring the evidence\ninto the response.",
+  "valueIntro": "A useful incident view helps the operator see what is related, what is missing, and who needs to act.",
+  "value": [
+   [
+    "Reduce context switching",
+    "Compare related measurements and events over the same period, mapped to the equipment and location your team recognizes."
+   ],
+   [
+    "See what could be affected",
+    "Follow the relationship between the signal, the asset, the dependent infrastructure, and the service your operator is investigating."
+   ],
+   [
+    "Connect to the next decision",
+    "Bring the suggested next check, procedure reference, owner, and field handoff into the response workflow within your agreed scope."
+   ]
+  ],
+  "detailTitle": "Fit the control room.\nDefine the boundary.",
+  "detailIntro": "Start with one incident and prove the whole path from the source signal to an operator’s useful next action.",
+  "detail": [
+   [
+    "Signals and integration",
+    "Identify the BMS, EPMS, or SCADA source, required points, units, timestamps, update rate, and supported connection path."
+   ],
+   [
+    "Data quality",
+    "Test stale, missing, mislabelled, and conflicting readings. A suggested explanation should change when the evidence changes."
+   ],
+   [
+    "Triage and response",
+    "Agree grouping, priority, ownership, acknowledgement, procedure references, and the handoff to remote or field teams."
+   ],
+   [
+    "Control authority",
+    "Scope observation, analysis, recommendations, and any equipment-control function separately. Define the human authorization and system responsibilities explicitly."
+   ]
+  ],
+  "evalIntro": "Choose a representative task, record the baseline, and agree what a useful result must demonstrate.",
+  "bring": [
+   "A historical incident with timestamps and signal history",
+   "The affected equipment and the response your team took",
+   "Your monitoring system and the points available for a trial"
+  ],
+  "measure": [
+   "Grouping quality and relevance of suggested next checks",
+   "Missed context, false correlations, and stale-data handling",
+   "Time from first signal to a coordinated investigation"
+  ],
+  "faq": [
+   [
+    "Does this replace our BMS or EPMS?",
+    "The starting point can be an analysis and workflow layer alongside those systems. Confirm which system produces the signals, where operators acknowledge events, and how Entangl fits the screens and processes already in use."
+   ],
+   [
+    "Which integrations are supported?",
+    "Bring the system, available interface, and point list. We will confirm the current connection path and configuration required for your environment. The name of a protocol alone does not establish that the complete workflow is ready."
+   ],
+   [
+    "Can it identify the root cause?",
+    "It can support an investigation by relating signals and site context within the agreed scope. Test suggested explanations against known incidents and inspect the evidence. Missing or conflicting data should remain visible rather than becoming certainty."
+   ],
+   [
+    "Does it automatically control equipment?",
+    "Observation, analysis, suggested responses, and equipment control are separate scopes. Do not infer control authority from a telemetry demonstration. Any control function needs an explicitly agreed design and authorization boundary."
+   ],
+   [
+    "Can an issue include an EOP and an iPad handoff?",
+    "That is part of the connected response direction. Demonstrate the procedure version, operator review, assignment, field handoff, and returned evidence for the proposed deployment."
+   ],
+   [
+    "What about a countdown to failure?",
+    "A response deadline and a physical prediction answer different questions. A physical forecast needs validated inputs, assumptions, and testing for that equipment and operating condition. This example does not predict time to failure."
+   ]
+  ],
+  "scope": "Telemetry is scoped with your deployment. Confirm signal access, point mapping, timestamps, latency, and the observation-versus-control boundary.",
+  "closeTitle": "Bring an incident.\nLet’s replay the response.",
+  "closeCopy": "Start with something your team has already lived through. We’ll define the signals, context, and outcome a useful evaluation needs.",
+  "related": [
+   "/platform/site-model",
+   "/platform/fieldwork",
+   "/platform/visibility"
+  ]
+ },
+ "visibility": {
+  "eyebrow": "CUSTOMER AND AUDIT VISIBILITY",
+  "title": "Show the work.\nMake the evidence easy to follow.",
+  "lead": "Give customers and auditors a clearer answer to what was reviewed, who made the decision, and what happened next. Keep the shared view within the boundary your team approves.",
+  "cta": "Map your customer view",
+  "ctaHref": "/demo?workflow=Customer+visibility&context=Map+the+customer+and+auditor+view+for+a+procedure%2C+its+approvals+and+execution+evidence.",
+  "demoLabel": "Switch perspectives",
+  "pills": [
+   "Clear review and approval status",
+   "An evidence trail",
+   "Audience-specific visibility"
+  ],
+  "demoKicker": "EXPLORE AN INTERACTIVE EXAMPLE",
+  "demoTitle": "One event.\nThe right view for each audience.",
+  "demoIntro": "Move through a fictional maintenance event. Switch between operator, customer, and auditor to see which records belong in each view.",
+  "valueTitle": "Replace the status chase\nwith a record people can inspect.",
+  "valueIntro": "A useful shared view starts with the question the customer or auditor is trying to answer.",
+  "value": [
+   [
+    "Make the status understandable",
+    "Distinguish draft, review, open findings, required approvals, work in progress, and completed evidence."
+   ],
+   [
+    "Share within an agreed scope",
+    "Define who can see a provider, site, hall, asset, procedure, or record. Test the boundaries from the recipient’s perspective."
+   ],
+   [
+    "Keep evidence connected",
+    "Relate the source, procedure version, decision, execution evidence, and customer update so the history can be followed."
+   ]
+  ],
+  "detailTitle": "Answer the question\nbehind the request.",
+  "detailIntro": "Different stakeholders need different levels of detail from the same operating history.",
+  "detail": [
+   [
+    "For the customer",
+    "What work affects our service? Has it been reviewed? What needs our approval? What update are we allowed to share internally?"
+   ],
+   [
+    "For the operator",
+    "What remains open? Which version is in use? Who owns the decision? Has the customer-facing update been approved for publication?"
+   ],
+   [
+    "For the auditor",
+    "Which source and procedure version were used? Who approved the work? What evidence supports completion? What exceptions remain unresolved?"
+   ],
+   [
+    "For an insurer or acquiring owner",
+    "What does the operating record demonstrate about maintenance, incident response, open findings, and follow-through? Define the appropriate evidence scope."
+   ]
+  ],
+  "evalIntro": "Choose a representative task, record the baseline, and agree what a useful result must demonstrate.",
+  "bring": [
+   "One recurring customer or audit request",
+   "The procedure, decision, and evidence behind that request",
+   "Your access rules and who approves external publication"
+  ],
+  "measure": [
+   "Time to answer a status or evidence request",
+   "Completeness and clarity of the shared record",
+   "Correct access boundaries across audiences and sites"
+  ],
+  "faq": [
+   [
+    "Can customers see the status without asking us for another email?",
+    "That is the shared-view direction. Define the procedure states, updates, source information, and audience access included in your deployment. Live progress depends on the underlying workflow and integrations."
+   ],
+   [
+    "Can we restrict the view to one customer’s hall or equipment?",
+    "Those boundaries belong in the access design. Test each role against permitted and excluded sites, halls, assets, and records, including what happens when a person’s responsibility changes."
+   ],
+   [
+    "Will an AI review replace the customer’s own approval?",
+    "A review record can support the customer’s decision. The customer still determines which checks and approvals its process requires. Make software findings and final acceptance clearly distinguishable."
+   ],
+   [
+    "Can the auditor see the source and the version that was used?",
+    "Use that as an evaluation requirement. Demonstrate the relationship between the source, procedure version, decision, and completion evidence, including how later revisions are represented."
+   ],
+   [
+    "What gets published automatically?",
+    "Define publication rules explicitly. A useful starting scope separates the internal working record from the customer-facing update and identifies who can approve release."
+   ],
+   [
+    "Can this support insurance or acquisition diligence?",
+    "A structured operating history can be useful evidence in those discussions. Agree the audience and records in scope. It does not itself establish compliance, insurability, a premium discount, or acceptance by an acquiring owner."
+   ]
+  ],
+  "scope": "Shared visibility is scoped with your deployment. Define site, equipment, customer, and role boundaries together with publication and approval responsibilities.",
+  "closeTitle": "Bring the question\nyour customer keeps asking.",
+  "closeCopy": "We’ll work backward to the record, the approval, and the access boundary needed to answer it clearly.",
+  "related": [
+   "/platform/review",
+   "/platform/fieldwork",
+   "/platform/portfolio"
+  ]
+ },
+ "maintenance": {
+  "eyebrow": "MAINTENANCE PLANNING",
+  "title": "Every task has a reason.\nEvery window has a context.",
+  "lead": "We’re building a way to turn equipment guidance and site requirements into a maintenance plan engineers can review—with dependencies, people, and work windows visible together.",
+  "cta": "Discuss maintenance planning",
+  "ctaHref": "/demo?workflow=Maintenance+planning&context=Scope+maintenance+planning+from+our+asset+list%2C+manuals%2C+work+windows+and+existing+schedule.",
+  "demoLabel": "Resolve a scheduling conflict",
+  "pills": [
+   "Tasks linked to their source",
+   "Dependencies in the plan",
+   "Work-package readiness"
+  ],
+  "demoKicker": "INTERACTIVE CONCEPT / PLANNED WORKFLOW",
+  "demoTitle": "A free slot isn’t\nthe whole scheduling decision.",
+  "demoIntro": "Move the UPS-B task away from the UPS-A window, then check parts and vendor readiness. The dates and intervals are fictional planning examples.",
+  "valueTitle": "Build a program\nyour team can explain.",
+  "valueIntro": "The proposed workflow connects why the work is needed with what must be ready for it to happen.",
+  "value": [
+   [
+    "A reason for the task",
+    "Relate proposed tasks and intervals to the applicable equipment model, OEM guidance, and site requirements."
+   ],
+   [
+    "A view of what could conflict",
+    "Bring work windows together with equipment dependencies, customer restrictions, and relevant resilience constraints."
+   ],
+   [
+    "A complete work package",
+    "Make the procedure, competent personnel, vendor coverage, required parts, and supporting evidence part of the preparation."
+   ]
+  ],
+  "detailTitle": "Plan the work\nthrough its whole cycle.",
+  "detailIntro": "Use the proposal to expose missing information before treating a schedule as ready for execution.",
+  "detail": [
+   [
+    "Establish the program",
+    "Start from the assets, applicable manuals, site policy, and current maintenance history. Retain the reason for a proposed interval."
+   ],
+   [
+    "Coordinate the window",
+    "Check affected systems, customer restrictions, related work, and resource availability. A calendar gap alone does not establish a safe window."
+   ],
+   [
+    "Prepare the package",
+    "Identify the procedure, approvals, qualified people, vendors, parts, and evidence required to complete the work."
+   ],
+   [
+    "Feed the next plan",
+    "Use accepted findings and completed work history to review future tasks and intervals under the site’s change process."
+   ]
+  ],
+  "evalIntro": "Shape the proposed workflow around your actual records, constraints, and acceptance criteria.",
+  "bring": [
+   "A sample asset list, manual, and current schedule",
+   "Known dependency or customer-window constraints",
+   "Your CMMS workflow and work-package requirements"
+  ],
+  "measure": [
+   "Traceability of proposed tasks and intervals",
+   "Detection of agreed scheduling conflicts",
+   "Completeness of work-package prerequisites"
+  ],
+  "faq": [
+   [
+    "Is maintenance planning available today?",
+    "It is a planned workflow. This page is an interactive concept for discussing the proposed direction. Ask for the current availability, development scope, responsibilities, and commitments before including it in a rollout plan."
+   ],
+   [
+    "Where would task frequencies come from?",
+    "The proposal connects a task and interval to the applicable equipment guidance and site policy. Engineers must verify the equipment applicability, operating conditions, requirements, and any proposed deviation."
+   ],
+   [
+    "Can this work with our existing CMMS?",
+    "Define which system owns scheduling, work orders, completion, and the authoritative maintenance record. The discussion should identify the export or integration work needed, rather than assuming a connector is already available."
+   ],
+   [
+    "Can it identify conflicting work?",
+    "The proposed direction uses equipment relationships, related work, and customer restrictions to help expose conflicts. The example covers one simple relationship. Real coverage depends on validated dependencies and the rules included in scope."
+   ],
+   [
+    "Can we build the first-year plan before a new site goes live?",
+    "That is a useful planning use case. Begin with the available equipment and documents, then review the program as design information becomes the installed site and commissioning results become available."
+   ],
+   [
+    "What about vendors and spare parts?",
+    "Bring personnel qualifications, vendor availability, required parts, and other prerequisites into the work-package design. Confirm which records are managed in Entangl and which remain in specialist systems."
+   ]
+  ],
+  "scope": "Planned workflow. This interactive concept illustrates the proposed direction. Confirm availability, implementation scope, and development commitments in the discussion.",
+  "closeTitle": "Bring your schedule.\nLet’s expose the dependencies.",
+  "closeCopy": "Use a real asset group to shape the proposed workflow and identify the data, constraints, and integrations it would need.",
+  "related": [
+   "/platform/site-model",
+   "/platform/procedures",
+   "/platform/portfolio"
+  ]
+ },
+ "portfolio": {
+  "eyebrow": "PORTFOLIO PERFORMANCE",
+  "title": "See where attention\nwill make a difference.",
+  "lead": "We’re building a view that connects work across sites to the decisions leaders need to make: where reviews are waiting, where support is needed, and where a customer’s demand deserves a conversation.",
+  "cta": "Discuss your portfolio view",
+  "ctaHref": "/demo?workflow=Portfolio+performance&context=Scope+portfolio+visibility+across+review+queues%2C+maintenance+records+and+customer+demand.",
+  "demoLabel": "Explore a portfolio",
+  "pills": [
+   "Records behind the metrics",
+   "Local differences visible",
+   "Operations connected to growth"
+  ],
+  "demoKicker": "INTERACTIVE CONCEPT / PLANNED WORKFLOW",
+  "demoTitle": "A portfolio view\nyou can ask questions of.",
+  "demoIntro": "Change the metric, select a site, and explore the records behind it. In the demand view, adjust the selected customer’s load against its contract.",
+  "valueTitle": "Move from a number\nto a useful next question.",
+  "valueIntro": "The goal is to direct attention, understand the cause, and act with the local context intact.",
+  "value": [
+   [
+    "See work waiting on people",
+    "Compare review queues, unresolved findings, and overdue work using consistent definitions and visible data coverage."
+   ],
+   [
+    "Put support where it is needed",
+    "Inspect the underlying records before deciding whether a site needs engineering time, a process change, or a different resource."
+   ],
+   [
+    "Notice the growth conversation",
+    "Relate customer demand to contracted load so account and operations teams can review an expansion opportunity together."
+   ]
+  ],
+  "detailTitle": "Make comparisons\nthat survive a closer look.",
+  "detailIntro": "The context around the number is part of the number’s meaning.",
+  "detail": [
+   [
+    "Common definitions",
+    "Agree what counts as an open review, overdue task, unresolved finding, and completed event before comparing sites."
+   ],
+   [
+    "Visible coverage",
+    "Show which sites are reporting, the period covered, and how recent the source is. Missing data should remain missing."
+   ],
+   [
+    "Local operating context",
+    "A newly commissioned hall, a mature campus, and a different customer mix create different workloads. Inspect those differences before ranking performance."
+   ],
+   [
+    "Commercial context",
+    "Contract utilization can trigger a conversation. Verified electrical, cooling, space, and resilience capacity must support any commitment to a customer."
+   ]
+  ],
+  "evalIntro": "Shape the proposed workflow around your actual records, constraints, and acceptance criteria.",
+  "bring": [
+   "Your current portfolio report and the decisions it supports",
+   "A few representative site records with consistent definitions",
+   "Customer contract limits and permitted demand data, if relevant"
+  ],
+  "measure": [
+   "Agreement between summary metrics and source records",
+   "Coverage, freshness, and comparability across sites",
+   "Whether leaders can identify and assign a useful next action"
+  ],
+  "faq": [
+   [
+    "Is portfolio performance available today?",
+    "It is a planned workflow. This example helps define what the view should answer. Confirm the current capability, data preparation, integration work, and development commitments for the scope you need."
+   ],
+   [
+    "What would we compare across sites?",
+    "Start with decisions you make today: open reviews, unresolved findings, overdue work, rework, or customer demand. Define the metric and reporting period, then prove that the underlying records support the summary."
+   ],
+   [
+    "How would missing or stale data be handled?",
+    "Make coverage and freshness visible. The example leaves a site’s demand unavailable instead of treating it as zero. Agree the acceptable update rate and who resolves gaps for each source."
+   ],
+   [
+    "Can we drill into the issue behind a site’s score?",
+    "The direction is to connect the summary to source records and local context. Start by defining which records a leader needs to inspect before assigning an owner or changing a resource plan."
+   ],
+   [
+    "Can this identify upsell opportunities?",
+    "Customer demand approaching a contractual limit can be a reason for an account conversation. It does not prove physical capacity or that the customer will buy more. Review the demand history, customer plans, and engineering constraints together."
+   ],
+   [
+    "How do we compare a new site with a mature site?",
+    "Keep the commissioning stage, workload mix, customer restrictions, and data coverage visible. Use like-for-like definitions and relevant peer groups rather than a single unexplained ranking."
+   ]
+  ],
+  "scope": "Planned workflow. The portfolio and capacity examples illustrate the direction. Confirm current availability, data sources, definitions, and integration scope.",
+  "closeTitle": "Bring the report\nyou wish you could drill into.",
+  "closeCopy": "We’ll work from the decisions you need to make to the definitions, source records, and data coverage a useful portfolio view requires.",
+  "related": [
+   "/platform/review",
+   "/platform/maintenance",
+   "/platform/visibility"
+  ]
+ }
+}
